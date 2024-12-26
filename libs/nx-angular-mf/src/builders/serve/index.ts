@@ -11,7 +11,7 @@ import {
 
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
-import { deepMergeObject, getMapName, prepareConfig } from '../helpers';
+import { deepMergeObject, getMapName, patchBuilderContext, prepareConfig } from '../helpers';
 
 
 function getBuilderAction() {
@@ -58,6 +58,8 @@ export async function* runBuilder(
   const externalDependencies = [...mapShareObject.values()].map(
     (i) => i.packageName
   );
+
+  patchBuilderContext(context, buildTarget, externalDependencies);
 
   const normalizeOuterOptions = await normalizeOptions(
     context,
