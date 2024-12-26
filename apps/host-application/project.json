@@ -5,13 +5,16 @@
   "prefix": "app",
   "sourceRoot": "apps/host-application/src",
   "tags": [],
+  "implicitDependencies": ["nx-angular-mf"],
   "targets": {
     "build-test": {
-      "executor": "@klerick/nx-angular-mf:build",
+      "dependsOn": ["^build"],
+      "executor": "./dist/libs/nx-angular-mf:build",
       "outputs": ["{options.outputPath}"]
     },
     "serve-test": {
-      "executor": "@klerick/nx-angular-mf:serve",
+      "dependsOn": ["^build"],
+      "executor": "./dist/libs/nx-angular-mf:serve",
       "outputs": ["{options.outputPath}"]
     },
     "build": {
