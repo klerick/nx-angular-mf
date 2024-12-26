@@ -30,7 +30,6 @@ export function patchBuilderContext(
   // the return value, Angular will use the Vite server for the `dev-server` target.
   context.getBuilderNameForTarget = async (target) => {
     const builderName = await originalGetBuilderNameForTarget(target);
-    console.log(builderName);
     if (executorToBuilderMap.has(builderName)) {
       return executorToBuilderMap.get(builderName)!;
     }

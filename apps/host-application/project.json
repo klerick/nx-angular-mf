@@ -28,12 +28,7 @@
           }
         ],
         "styles": ["apps/host-application/src/styles.css"],
-        "scripts": [],
-        "server": "apps/host-application/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/host-application/src/server.ts"
-        },
-        "outputMode": "server"
+        "scripts": []
       },
       "configurations": {
         "production": {
