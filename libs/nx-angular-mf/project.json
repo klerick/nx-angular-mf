@@ -13,7 +13,14 @@
   },
   "tags": [],
   "targets": {
+    "merge-schemes": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./tools/merge-schemes/index.mjs"
+      }
+    },
     "build": {
+      "dependsOn": ["merge-schemes"],
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
