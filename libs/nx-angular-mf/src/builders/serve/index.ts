@@ -11,7 +11,7 @@ import {
 
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
-import { deepMergeObject, prepareConfig } from '../helpers';
+import { deepMergeObject, getMapName, prepareConfig } from '../helpers';
 
 
 function getBuilderAction() {
@@ -32,6 +32,8 @@ export async function* runBuilder(
 ) {
   context.logger.info('Run serve mf');
 
+  const {mf: defaultOptionsMfe, ...defaultOptions} = options;
+
   const buildTarget = targetFromTargetString(options.buildTarget);
   const targetOptions = (await context.getTargetOptions(
     buildTarget
@@ -39,7 +41,7 @@ export async function* runBuilder(
 
   const resultMfeOptions = deepMergeObject(
     targetOptions['mf'] || {},
-    options.mf || {}
+    defaultOptionsMfe || {}
   );
 
   const optionsMfe = await prepareConfig(
@@ -48,10 +50,19 @@ export async function* runBuilder(
     context
   );
 
+  const mapShareObject = getMapName(
+    optionsMfe.shared,
+    optionsMfe.sharedMappings
+  );
+
+  const externalDependencies = [...mapShareObject.values()].map(
+    (i) => i.packageName
+  );
+
   const normalizeOuterOptions = await normalizeOptions(
     context,
     context.target.project,
-    options as any
+    defaultOptions
   );
 
   const extensions = {
