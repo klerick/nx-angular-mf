@@ -41,6 +41,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "indexHtmlTransformer": {
+          "type": "string"
         }
       },
       "additionalProperties": false

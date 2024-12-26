@@ -98,7 +98,10 @@ export async function* runBuilder(
 
 
   const transforms = {
-    indexHtml: mainTransform,
+    indexHtml: async (input: string) => {
+      const mainTransformResult = await mainTransform(input);
+      return optionsMfe.indexHtmlTransformer(mainTransformResult);
+    },
   };
 
   const runServer = serveWithVite(

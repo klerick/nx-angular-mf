@@ -3,5 +3,6 @@ export type SchemaMf = {
     skipList?: string | string[];
     externalList?: string | string[];
     esPlugins?: string[];
+    indexHtmlTransformer?: string;
   };
 };

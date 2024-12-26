@@ -7,6 +7,7 @@ import { BuildExecutorSchema } from '../build/schema';
 import { ConfigMf } from '../types';
 import { workspaceRootPath } from './utils';
 import { externalMap, getFullShare, getSharedMappings } from './dependencies';
+import { loadModule } from './load-module';
 
 export async function prepareConfig(
   defaultOptions: SchemaMf['mf'],
@@ -16,6 +17,7 @@ export async function prepareConfig(
   const skipList: ConfigMf['skipList'] = [];
   const externalList: ConfigMf['externalList'] = [];
   const esPlugins: ConfigMf['esPlugins'] = [];
+  let indexHtmlTransformer = (input: string) => Promise.resolve(input);
 
   if (defaultOptions.skipList) {
     skipList.push(...(await checkIsFileOrArray(defaultOptions.skipList)));
@@ -42,6 +44,14 @@ export async function prepareConfig(
     esPlugins.push(...tmpEsPlugins);
   }
 
+  if (defaultOptions.indexHtmlTransformer) {
+    indexHtmlTransformer = await loadModule(
+      join(workspaceRootPath, defaultOptions.indexHtmlTransformer),
+      join(workspaceRootPath, `${buildOptions['tsConfig']}`),
+      context.logger
+    );
+  }
+
   return {
     skipList: skipList,
     externalList: externalList,
@@ -52,6 +62,7 @@ export async function prepareConfig(
     outPutFileNames: [],
     esPlugins,
     allImportMap: {},
+    indexHtmlTransformer
   };
 }
 

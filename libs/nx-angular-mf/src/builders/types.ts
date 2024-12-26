@@ -6,6 +6,7 @@ export type ConfigMf = {
   outPutFileNames: string[];
   esPlugins: string[];
   allImportMap: Record<string, unknown>;
+  indexHtmlTransformer: (input: string) => Promise<string>;
 };
 
 export type ShareOptions = {
