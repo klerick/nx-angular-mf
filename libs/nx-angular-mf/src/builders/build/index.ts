@@ -1,11 +1,15 @@
-import { PromiseExecutor } from '@nx/devkit';
+import { BuilderContext, createBuilder } from '@angular-devkit/architect';
+
 import { BuildExecutorSchema } from './schema';
 
-const runExecutor: PromiseExecutor<BuildExecutorSchema> = async (options) => {
-  console.log('Executor ran for build', options);
-  return {
+export async function* runBuilder(
+  options: BuildExecutorSchema,
+  context: BuilderContext
+) {
+  context.logger.info('Run build mf');
+  yield {
     success: true,
   };
-};
+}
 
-export default runExecutor;
+export default createBuilder(runBuilder);
