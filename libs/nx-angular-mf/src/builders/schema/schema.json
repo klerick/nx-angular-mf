@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "This schema would be merge to official schema of angular-devkit/build-angular",
   "properties": {
-    "mfe": {
+    "mf": {
       "type": "object",
       "properties": {
         "externalList": {

@@ -2,6 +2,7 @@ import { BuilderContext, createBuilder } from '@angular-devkit/architect';
 import { buildApplication } from '@angular-devkit/build-angular';
 
 import { BuildExecutorSchema } from './schema';
+import { getMapName, prepareConfig } from '../helpers';
 
 
 export async function* runBuilder(
@@ -11,6 +12,17 @@ export async function* runBuilder(
   context.logger.info('Run build mf');
 
   const { mf: defaultOptionsMfe, ...defaultOptions } = options;
+
+  const optionsMfe = await prepareConfig(defaultOptionsMfe, options, context);
+
+  const mapShareObject = getMapName(
+    optionsMfe.shared,
+    optionsMfe.sharedMappings
+  );
+
+  defaultOptions.externalDependencies = [...mapShareObject.values()].map(
+    (i) => i.packageName
+  );
 
   const extensions = {
     codePlugins: [],

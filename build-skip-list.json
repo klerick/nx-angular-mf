@@ -17,6 +17,6 @@
   "@angular/core/testing",
   "@angular/ssr/node",
   "rxjs/testing",
-  "@klerick/native-federation-ssr",
+  "@klerick/nx-angular-mf",
   "@angular/platform-server/init"
 ]

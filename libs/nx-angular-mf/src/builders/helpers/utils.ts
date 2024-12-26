@@ -1,5 +1,16 @@
 import { getSystemPath, normalize } from '@angular-devkit/core';
-import { workspaceRoot } from 'nx/src/utils/workspace-root';
+import { workspaceRoot, readJsonFile } from '@nx/devkit';
+import { join } from 'path';
+
+export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
+
+export function getRootPackageJson() {
+  return readJsonFile(join(workspaceRootPath, 'package.json'));
+}
+
+export function findRootTsConfigJson() {
+  return readJsonFile(join(workspaceRootPath, 'tsconfig.base.json'));
+}
 
 export function deepMergeObject(targetObject = {}, sourceObject = {}) {
   const copyTargetObject = JSON.parse(JSON.stringify(targetObject));
@@ -30,4 +41,4 @@ export function deepMergeObject(targetObject = {}, sourceObject = {}) {
   return copyTargetObject;
 }
 
-export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
+

@@ -6,6 +6,7 @@ import { SchemaMf } from '../schema';
 import { BuildExecutorSchema } from '../build/schema';
 import { ConfigMf } from '../types';
 import { workspaceRootPath } from './utils';
+import { externalMap, getFullShare, getSharedMappings } from './dependencies';
 
 export async function prepareConfig(
   defaultOptions: SchemaMf['mf'],
@@ -23,9 +24,16 @@ export async function prepareConfig(
     externalList.push(...(await checkIsFileOrArray(defaultOptions.externalList)));
   }
 
+  const externalMapObject = externalMap(externalList);
+  const shareObject = getFullShare(externalMapObject, skipList);
+
   return {
     skipList: skipList,
     externalList: externalList,
+    shared: shareObject,
+    sharedMappings: getSharedMappings().filter(
+      (i) => !skipList.includes(i.key)
+    ),
   };
 }
 
