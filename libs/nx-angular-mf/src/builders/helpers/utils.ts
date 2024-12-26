@@ -50,7 +50,7 @@ export function getDataForImportMap(
   return {
     imports: [...mapShareObject.entries()].reduce((acum, [key, val]) => {
 
-      acum[val.packageName] = key + '.js';
+      acum[val.packageName] = `./${key}.js`;
 
       return acum;
     }, {}),

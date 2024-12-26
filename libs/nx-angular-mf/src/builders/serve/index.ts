@@ -12,7 +12,7 @@ import { Plugin } from 'esbuild';
 
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
-import { deepMergeObject, getMapName, loadModule, patchBuilderContext, prepareConfig } from '../helpers';
+import { deepMergeObject, getMapName, indexHtml, loadModule, patchBuilderContext, prepareConfig } from '../helpers';
 import { entryPointForExtendDependencies } from '../es-plugin';
 
 
@@ -94,10 +94,11 @@ export async function* runBuilder(
     buildPlugins: resultEsBuild,
   };
 
+  const mainTransform = await indexHtml(optionsMfe);
+
+
   const transforms = {
-    indexHtml: async (input: string) => {
-      return input;
-    },
+    indexHtml: mainTransform,
   };
 
   const runServer = serveWithVite(

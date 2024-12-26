@@ -50,7 +50,8 @@ export async function prepareConfig(
       (i) => !skipList.includes(i.key)
     ),
     outPutFileNames: [],
-    esPlugins
+    esPlugins,
+    allImportMap: {},
   };
 }
 
