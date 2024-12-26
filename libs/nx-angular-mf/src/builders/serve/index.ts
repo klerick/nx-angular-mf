@@ -8,10 +8,11 @@ import {
   serveWithVite,
   buildApplicationInternal,
 } from '@angular/build/private';
+import { Plugin } from 'esbuild';
 
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
-import { deepMergeObject, getMapName, patchBuilderContext, prepareConfig } from '../helpers';
+import { deepMergeObject, getMapName, loadModule, patchBuilderContext, prepareConfig } from '../helpers';
 import { entryPointForExtendDependencies } from '../es-plugin';
 
 
@@ -78,7 +79,13 @@ export async function* runBuilder(
     defaultOptions
   );
 
+  const esPluginPromise = optionsMfe.esPlugins.map((item) =>
+    loadModule<Plugin>(item, targetOptions.tsConfig, context.logger)
+  );
+  const esPlugins = await Promise.all(esPluginPromise);
+
   const resultEsBuild = [
+    ...esPlugins,
     entryPointForExtendDependencies(optionsMfe)
   ]
 

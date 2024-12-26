@@ -4,6 +4,7 @@ export type ConfigMf = {
   shared: SharedMap;
   sharedMappings: { key: string; path: string }[];
   outPutFileNames: string[];
+  esPlugins: string[];
 };
 
 export type ShareOptions = {

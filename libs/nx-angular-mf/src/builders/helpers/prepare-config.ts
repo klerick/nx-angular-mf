@@ -15,6 +15,7 @@ export async function prepareConfig(
 ): Promise<ConfigMf> {
   const skipList: ConfigMf['skipList'] = [];
   const externalList: ConfigMf['externalList'] = [];
+  const esPlugins: ConfigMf['esPlugins'] = [];
 
   if (defaultOptions.skipList) {
     skipList.push(...(await checkIsFileOrArray(defaultOptions.skipList)));
@@ -27,6 +28,20 @@ export async function prepareConfig(
   const externalMapObject = externalMap(externalList);
   const shareObject = getFullShare(externalMapObject, skipList);
 
+  if (defaultOptions.esPlugins && Array.isArray(defaultOptions.esPlugins)) {
+    const tmpEsPlugins = [];
+    for (const pathToPlugin of defaultOptions.esPlugins) {
+      const fullPathToPlugin = join(workspaceRootPath, pathToPlugin);
+      const result = await fsPromise.lstat(fullPathToPlugin);
+      if (!result.isFile()) {
+        throw new Error(`Invalid plugin path: ${result}`);
+      }
+
+      tmpEsPlugins.push(pathToPlugin);
+    }
+    esPlugins.push(...tmpEsPlugins);
+  }
+
   return {
     skipList: skipList,
     externalList: externalList,
@@ -34,7 +49,8 @@ export async function prepareConfig(
     sharedMappings: getSharedMappings().filter(
       (i) => !skipList.includes(i.key)
     ),
-    outPutFileNames: []
+    outPutFileNames: [],
+    esPlugins
   };
 }
 

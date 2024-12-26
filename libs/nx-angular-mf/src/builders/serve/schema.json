@@ -169,6 +169,13 @@
               "type": "string"
             }
           ]
+        },
+        "esPlugins": {
+          "description": "List of esbuild plugins that should be applied to the build.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false
