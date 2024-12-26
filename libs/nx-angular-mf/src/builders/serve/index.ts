@@ -1,17 +1,21 @@
-import { BuilderContext, createBuilder } from '@angular-devkit/architect';
+import {
+  BuilderContext,
+  createBuilder,
+  targetFromTargetString,
+} from '@angular-devkit/architect';
 import { normalizeOptions } from '@angular-devkit/build-angular/src/builders/dev-server/options';
 import {
   serveWithVite,
   buildApplicationInternal,
 } from '@angular/build/private';
 
-
 import { ServeExecutorSchema } from './schema';
+import { BuildExecutorSchema } from '../build/schema';
+import { deepMergeObject, prepareConfig } from '../helpers';
 
 
 function getBuilderAction() {
   return async function* (options, context, extensions) {
-
     for await (const result of buildApplicationInternal(
       options,
       context,
@@ -28,6 +32,21 @@ export async function* runBuilder(
 ) {
   context.logger.info('Run serve mf');
 
+  const buildTarget = targetFromTargetString(options.buildTarget);
+  const targetOptions = (await context.getTargetOptions(
+    buildTarget
+  )) as unknown as BuildExecutorSchema;
+
+  const resultMfeOptions = deepMergeObject(
+    targetOptions['mf'] || {},
+    options.mf || {}
+  );
+
+  const optionsMfe = await prepareConfig(
+    resultMfeOptions,
+    targetOptions,
+    context
+  );
 
   const normalizeOuterOptions = await normalizeOptions(
     context,
@@ -42,7 +61,7 @@ export async function* runBuilder(
 
   const transforms = {
     indexHtml: async (input: string) => {
-      return input
+      return input;
     },
   };
 

@@ -12,6 +12,10 @@
       "executor": "./dist/libs/nx-angular-mf:build",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "mf": {
+          "externalList": "build-external-list.json",
+          "skipList": "build-skip-list.json"
+        },
         "outputPath": "dist/apps/host-application",
         "index": "apps/host-application/src/index.html",
         "browser": "apps/host-application/src/main.ts",

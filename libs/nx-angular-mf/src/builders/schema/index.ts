@@ -1,3 +1,6 @@
 export type SchemaMf = {
-  mf?: Record<string, unknown>;
+  mf?: {
+    skipList?: string | string[];
+    externalList?: string | string[];
+  };
 };

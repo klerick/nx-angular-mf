@@ -1,0 +1,22 @@
+[
+  "@angular/compiler-cli",
+  "@angular-devkit/core",
+  "@angular/cdk/testing",
+  "@angular/cdk/testing/selenium-webdriver",
+  "@angular/cdk/testing/testbed",
+  "@angular/cdk/schematics",
+  "@angular/cdk/text-field",
+  "@schematics/angular",
+  "@angular/platform-server/testing",
+  "@angular/platform-browser-dynamic/testing",
+  "@angular/platform-browser/testing",
+  "@angular/router/testing",
+  "@angular/animations/browser/testing",
+  "@angular/common/http/testing",
+  "@angular/common/testing",
+  "@angular/core/testing",
+  "@angular/ssr/node",
+  "rxjs/testing",
+  "@klerick/native-federation-ssr",
+  "@angular/platform-server/init"
+]

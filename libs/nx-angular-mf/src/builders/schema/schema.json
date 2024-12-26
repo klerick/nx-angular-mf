@@ -4,6 +4,38 @@
   "properties": {
     "mfe": {
       "type": "object",
+      "properties": {
+        "externalList": {
+          "description": "List of package imports that should use as external for building the MFE.",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "pat to file json",
+              "type": "string"
+            }
+          ]
+        },
+        "skipList": {
+          "description": "List of package imports that should not use as external for building the MFE.",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "description": "pat to file json",
+              "type": "string"
+            }
+          ]
+        }
+      },
       "additionalProperties": false
     }
   }
