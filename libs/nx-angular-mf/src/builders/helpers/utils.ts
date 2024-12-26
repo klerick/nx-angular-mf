@@ -1,6 +1,8 @@
 import { getSystemPath, normalize } from '@angular-devkit/core';
 import { workspaceRoot, readJsonFile } from '@nx/devkit';
 import { join } from 'path';
+import { ConfigMf, DataForImportMap } from '../types';
+import { getMapName } from './dependencies';
 
 export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
 
@@ -41,4 +43,16 @@ export function deepMergeObject(targetObject = {}, sourceObject = {}) {
   return copyTargetObject;
 }
 
+export function getDataForImportMap(
+  mfeConfig: ConfigMf,
+): DataForImportMap {
+  const mapShareObject = getMapName(mfeConfig.shared, mfeConfig.sharedMappings);
+  return {
+    imports: [...mapShareObject.entries()].reduce((acum, [key, val]) => {
 
+      acum[val.packageName] = key + '.js';
+
+      return acum;
+    }, {}),
+  };
+}

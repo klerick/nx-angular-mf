@@ -11,6 +11,7 @@
   "@angular/platform-browser-dynamic/testing",
   "@angular/platform-browser/testing",
   "@angular/router/testing",
+  "@angular/router/upgrade",
   "@angular/animations/browser/testing",
   "@angular/common/http/testing",
   "@angular/common/testing",

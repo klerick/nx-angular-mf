@@ -21,3 +21,7 @@ export type MapPackage = Map<
   string,
   { packageName: string; entryPoint: string }
 >;
+
+export type DataForImportMap = {
+  imports: Record<string, string>;
+};
