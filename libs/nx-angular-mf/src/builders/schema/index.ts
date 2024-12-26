@@ -1,3 +1,3 @@
 export type SchemaMf = {
-  mf?: {};
+  mf?: Record<string, unknown>;
 };

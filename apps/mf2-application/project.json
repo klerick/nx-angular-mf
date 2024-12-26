@@ -7,7 +7,8 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
+      "dependsOn": ["^build"],
+      "executor": "./dist/libs/nx-angular-mf:build",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/mf2-application",
@@ -49,7 +50,8 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "dependsOn": ["^build"],
+      "executor": "./dist/libs/nx-angular-mf:serve",
       "configurations": {
         "production": {
           "buildTarget": "mf2-application:build:production"
