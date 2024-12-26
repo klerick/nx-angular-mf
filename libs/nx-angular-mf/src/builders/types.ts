@@ -3,6 +3,7 @@ export type ConfigMf = {
   externalList: string[];
   shared: SharedMap;
   sharedMappings: { key: string; path: string }[];
+  outPutFileNames: string[];
 };
 
 export type ShareOptions = {

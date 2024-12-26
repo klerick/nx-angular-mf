@@ -12,10 +12,21 @@ import {
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
 import { deepMergeObject, getMapName, patchBuilderContext, prepareConfig } from '../helpers';
+import { entryPointForExtendDependencies } from '../es-plugin';
 
 
 function getBuilderAction() {
-  return async function* (options, context, extensions) {
+  return async function* (options, context, pluginsOrExtensions) {
+
+    let extensions;
+    if (pluginsOrExtensions && Array.isArray(pluginsOrExtensions)) {
+      extensions = {
+        codePlugins: pluginsOrExtensions,
+      };
+    } else {
+      extensions = pluginsOrExtensions;
+    }
+
     for await (const result of buildApplicationInternal(
       options,
       context,
@@ -67,9 +78,13 @@ export async function* runBuilder(
     defaultOptions
   );
 
+  const resultEsBuild = [
+    entryPointForExtendDependencies(optionsMfe)
+  ]
+
   const extensions = {
     middleware: [],
-    buildPlugins: [],
+    buildPlugins: resultEsBuild,
   };
 
   const transforms = {

@@ -34,6 +34,7 @@ export async function prepareConfig(
     sharedMappings: getSharedMappings().filter(
       (i) => !skipList.includes(i.key)
     ),
+    outPutFileNames: []
   };
 }
 
