@@ -6,6 +6,14 @@
   "sourceRoot": "apps/host-application/src",
   "tags": [],
   "targets": {
+    "build-test": {
+      "executor": "@klerick/nx-angular-mf:build",
+      "outputs": ["{options.outputPath}"]
+    },
+    "serve-test": {
+      "executor": "@klerick/nx-angular-mf:serve",
+      "outputs": ["{options.outputPath}"]
+    },
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
