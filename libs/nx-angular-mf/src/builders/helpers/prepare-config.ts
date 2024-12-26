@@ -17,6 +17,9 @@ export async function prepareConfig(
   const skipList: ConfigMf['skipList'] = [];
   const externalList: ConfigMf['externalList'] = [];
   const esPlugins: ConfigMf['esPlugins'] = [];
+  const remoteEntry: ConfigMf['remoteEntry'] = defaultOptions.remoteEntry || {};
+  const exposes: ConfigMf['exposes'] = {};
+
   let indexHtmlTransformer = (input: string) => Promise.resolve(input);
 
   if (defaultOptions.skipList) {
@@ -62,7 +65,9 @@ export async function prepareConfig(
     outPutFileNames: [],
     esPlugins,
     allImportMap: {},
-    indexHtmlTransformer
+    indexHtmlTransformer,
+    remoteEntry,
+    exposes
   };
 }
 

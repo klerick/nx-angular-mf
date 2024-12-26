@@ -7,6 +7,8 @@ export type ConfigMf = {
   esPlugins: string[];
   allImportMap: Record<string, unknown>;
   indexHtmlTransformer: (input: string) => Promise<string>;
+  exposes: Record<string, string>;
+  remoteEntry: Record<string, string>;
 };
 
 export type ShareOptions = {

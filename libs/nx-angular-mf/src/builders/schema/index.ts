@@ -4,5 +4,7 @@ export type SchemaMf = {
     externalList?: string | string[];
     esPlugins?: string[];
     indexHtmlTransformer?: string;
+    exposes?: Record<string, string>;
+    remoteEntry?: Record<string, string>;
   };
 };

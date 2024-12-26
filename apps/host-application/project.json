@@ -15,7 +15,10 @@
         "mf": {
           "externalList": "build-external-list.json",
           "skipList": "build-skip-list.json",
-          "esPlugins": ["tools/esbuild-plugin/test-external-plugin.ts"]
+          "esPlugins": ["tools/esbuild-plugin/test-external-plugin.ts"],
+          "remoteEntry": {
+            "firstRemote": "http://localhost:4201/"
+          }
         },
         "outputPath": "dist/apps/host-application",
         "index": "apps/host-application/src/index.html",

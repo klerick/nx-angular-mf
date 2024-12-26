@@ -685,6 +685,15 @@
           "items": {
             "type": "string"
           }
+        },
+        "indexHtmlTransformer": {
+          "type": "string"
+        },
+        "exposes": {
+          "type": "object"
+        },
+        "remoteEntry": {
+          "type": "object"
         }
       },
       "additionalProperties": false

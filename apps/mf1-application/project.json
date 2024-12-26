@@ -11,6 +11,15 @@
       "executor": "./dist/libs/nx-angular-mf:build",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "mf": {
+          "externalList": "build-external-list.json",
+          "skipList": "build-skip-list.json",
+          "esPlugins": ["tools/esbuild-plugin/test-external-plugin.ts"],
+          "exposes": {
+            "FirstRemoteRoute": "/apps/mf1-application/src/app/remote/first/index.ts",
+            "SecondRemoteRoute": "/apps/mf1-application/src/app/remote/second/index.ts"
+          }
+        },
         "outputPath": "dist/apps/mf1-application",
         "index": "apps/mf1-application/src/index.html",
         "browser": "apps/mf1-application/src/main.ts",
@@ -52,6 +61,9 @@
     "serve": {
       "dependsOn": ["^build"],
       "executor": "./dist/libs/nx-angular-mf:serve",
+      "options": {
+        "port": 4201
+      },
       "configurations": {
         "production": {
           "buildTarget": "mf1-application:build:production"
@@ -81,6 +93,7 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
+        "port": 4001,
         "buildTarget": "mf1-application:build",
         "staticFilePath": "dist/apps/mf1-application/browser",
         "spa": true
