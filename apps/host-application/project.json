@@ -7,18 +7,9 @@
   "tags": [],
   "implicitDependencies": ["nx-angular-mf"],
   "targets": {
-    "build-test": {
+    "build": {
       "dependsOn": ["^build"],
       "executor": "./dist/libs/nx-angular-mf:build",
-      "outputs": ["{options.outputPath}"]
-    },
-    "serve-test": {
-      "dependsOn": ["^build"],
-      "executor": "./dist/libs/nx-angular-mf:serve",
-      "outputs": ["{options.outputPath}"]
-    },
-    "build": {
-      "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/host-application",
@@ -65,7 +56,8 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "dependsOn": ["^build"],
+      "executor": "./dist/libs/nx-angular-mf:serve",
       "configurations": {
         "production": {
           "buildTarget": "host-application:build:production"
