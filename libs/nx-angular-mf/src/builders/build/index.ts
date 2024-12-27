@@ -46,6 +46,8 @@ export async function* runBuilder(
     serverSSRPlugin(optionsMfe.deployUrl),
     moveCustomLoaderPlugin(),
   ];
+  // @ts-ignore
+  defaultOptions.partialSSRBuild = true;
 
   const extensions = {
     codePlugins: resultEsBuild,
