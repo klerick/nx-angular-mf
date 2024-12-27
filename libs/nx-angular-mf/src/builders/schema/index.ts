@@ -6,5 +6,6 @@ export type SchemaMf = {
     indexHtmlTransformer?: string;
     exposes?: Record<string, string>;
     remoteEntry?: Record<string, string>;
+    deployUrlEnvName?: string;
   };
 };

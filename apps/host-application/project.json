@@ -20,6 +20,7 @@
             "firstRemote": "http://localhost:4201/"
           }
         },
+        "deployUrl": "http://localhost:4200/",
         "outputPath": "dist/apps/host-application",
         "index": "apps/host-application/src/index.html",
         "browser": "apps/host-application/src/main.ts",

@@ -69,6 +69,13 @@ export async function prepareConfig(
     deployUrl = buildOptions.deployUrl;
   }
 
+  if (
+    defaultOptions.deployUrlEnvName &&
+    process.env[defaultOptions.deployUrlEnvName]
+  ) {
+    deployUrl = process.env[defaultOptions.deployUrlEnvName];
+  }
+
   return {
     skipList: skipList,
     externalList: externalList,
