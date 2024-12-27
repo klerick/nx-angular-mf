@@ -131,6 +131,13 @@ export async function resolve(
 
   const specifierUrl = new URL(specifier, fakeRootPath);
 
+  const cacheFiles = await getCacheFiles();
+  const dataFromCache = cacheFiles.get(importMapName);
+
+  if (dataFromCache && dataFromCache.hash) {
+    specifierUrl.searchParams.set('v', dataFromCache.hash);
+  }
+
   return {
     url: specifierUrl.toString(),
     shortCircuit: true,

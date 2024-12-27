@@ -19,12 +19,14 @@ import {
   indexHtml,
   loadModule,
   patchBuilderContext,
-  prepareConfig
+  prepareConfig, reloadDevServer
 } from '../helpers';
 import { entryPointForExtendDependencies, importMapConfigPlugin } from '../es-plugin';
 import { register } from 'node:module';
-import { CACHE_FILE, IMPORT_MAP } from '../custom-loader/constants';
+import { CACHE_FILE, CLEAR_REMOTE, IMPORT_MAP } from '../custom-loader/constants';
 import { OutputFileRecord } from '../types';
+import process from 'node:process';
+import { loadEsmModule } from '../custom-loader/custom-loader-utils';
 
 const { port1, port2 } = new MessageChannel();
 
@@ -54,12 +56,17 @@ function getBuilderAction(
         yield result;
         continue;
       }
-
+      let needUpdate = false;
       for (const [key, file] of Object.entries(result.files)) {
         if (key.endsWith('.js.map')) continue;
         const name = key.split('.').at(0);
         const shareObject = mapShareObject.get(name);
         if (file.origin === 'memory' && shareObject) {
+          const prevVersion = fileFromEsBuild.get(name);
+          if (!needUpdate) {
+            needUpdate = prevVersion && prevVersion.hash !== file.hash;
+          }
+
           fileFromEsBuild.set(name, {
             contents: file.contents,
             size: file.contents.byteLength,
@@ -69,10 +76,23 @@ function getBuilderAction(
           });
         }
       }
+      if (needUpdate) {
+        process.nextTick(handleUpdate);
+      }
       port1.postMessage({ kind: CACHE_FILE, result: fileFromEsBuild });
       yield result;
     }
   };
+}
+
+async function handleUpdate() {
+  const server = await loadEsmModule<typeof import('vite')>('vite').then(
+    (r) => r.default['serverFromPatch']
+  );
+  port1.postMessage({
+    kind: CLEAR_REMOTE,
+  });
+  await reloadDevServer(server);
 }
 
 export async function* runBuilder(

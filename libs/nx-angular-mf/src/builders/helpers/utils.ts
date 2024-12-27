@@ -1,11 +1,15 @@
 import { getSystemPath, normalize } from '@angular-devkit/core';
-import { workspaceRoot, readJsonFile } from '@nx/devkit';
+import { workspaceRoot, readJsonFile, normalizePath } from '@nx/devkit';
 import { join, sep } from 'path';
 import { ConfigMf, DataForImportMap } from '../types';
 import { getMapName } from './dependencies';
 import { existsSync } from 'fs';
 import { pathToFileURL } from 'node:url';
 import { PREF } from '../custom-loader/patch-vite-dev-server';
+// @ts-expect-error need only type
+import { ViteDevServer } from 'vite';
+// @ts-expect-error need only type
+import type { ɵdestroyAngularServerApp as destroyAngularServerApp } from '@angular/ssr';
 
 export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
 
@@ -86,4 +90,27 @@ export function getPathForRegister(
     parentUrl: pathToFileURL(pathToFile),
     fileName: `.${sep}${fileName}`,
   };
+}
+
+export async function reloadDevServer(server: ViteDevServer) {
+  (
+    server.moduleGraph.getModulesByFile(
+      normalizePath(join(server.config.root, '/main.js'))
+    ) || []
+  ).forEach((m) => server.moduleGraph.invalidateModule(m));
+
+  const { ɵdestroyAngularServerApp } = (await server.ssrLoadModule(
+    '/main.server.mjs'
+  )) as {
+    ɵdestroyAngularServerApp: typeof destroyAngularServerApp;
+  };
+
+  ɵdestroyAngularServerApp();
+
+  (
+    server.moduleGraph.getModulesByFile(
+      normalizePath(join(server.config.root, '/main.server.mjs'))
+    ) || []
+  ).forEach((m) => server.moduleGraph.invalidateModule(m));
+  await server.ssrLoadModule('/main.server.mjs');
 }
