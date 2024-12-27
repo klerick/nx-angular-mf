@@ -49,7 +49,11 @@
             "glob": "executors.json",
             "output": "."
           }
-        ]
+        ],
+        "additionalEntryPoints": [
+          "libs/nx-angular-mf/src/loadModule.ts"
+        ],
+        "generateExportsField": true
       }
     },
     "nx-release-publish": {

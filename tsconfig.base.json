@@ -16,6 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@klerick/nx-angular-mf": ["libs/nx-angular-mf/src/index.ts"],
+      "@klerick/nx-angular-mf/loadModule": [
+        "libs/nx-angular-mf/src/loadModule.ts"
+      ],
       "@nx-angular-mf/test-shared-library": [
         "libs/test-shared-library/src/index.ts"
       ]
