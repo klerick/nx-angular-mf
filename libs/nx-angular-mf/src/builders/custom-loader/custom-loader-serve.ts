@@ -1,16 +1,28 @@
 import { Context, DefaultLoad, NextResolve } from './types';
-
+import { join } from 'path';
 
 export async function initialize({ port }: { port: MessagePort }) {
   port.onmessage = async (event) => {};
 }
 
 export async function resolve(
-  specifierInput: string,
+  specifier: string,
   context: Context,
   nextResolve: NextResolve
 ) {
-  nextResolve(specifierInput, context, nextResolve);
+  const { parentURL } = context;
+  if (
+    specifier.startsWith('vite') &&
+    parentURL.indexOf('@angular/build') > -1
+  ) {
+    return nextResolve(
+      join(__dirname, 'patch-vite-dev-server.js'),
+      context,
+      nextResolve
+    );
+  }
+
+  return nextResolve(specifier, context, nextResolve);
 }
 
 export async function load(
