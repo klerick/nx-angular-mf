@@ -5,7 +5,7 @@ import {
   DeferredPromise,
   resolveModulePath,
 } from './custom-loader-utils';
-import { getResultImportMap } from '../helpers';
+import { getResultImportMap, IMPORT_MAP_CONFIG_NAME } from '../helpers/init-import-map-utils';
 import { pathToFileURL } from 'url';
 // @ts-expect-error should be esm
 import type { ImportMap } from '@jspm/import-map';
@@ -21,12 +21,12 @@ const fakeRootPath = pathToFileURL(
 ).toString();
 
 async function initImportMap(deployHost: string) {
-  const deployUrl = new URL('importmap.json', deployHost);
+  const deployUrl = new URL(IMPORT_MAP_CONFIG_NAME, deployHost);
   const importMapConfig = await fetch(deployUrl)
     .then((r) => r.json())
     .catch((err) => {
       const newError = new Error(
-        `Fetch "importmap.json" from "${deployHost}" failed`,
+        `Fetch "${IMPORT_MAP_CONFIG_NAME}" from "${deployHost}" failed`,
         { cause: err }
       );
       throw newError;

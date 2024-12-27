@@ -1,8 +1,10 @@
 import { BuilderContext, createBuilder } from '@angular-devkit/architect';
 import { buildApplication } from '@angular-devkit/build-angular';
+import { Plugin } from 'esbuild';
 
 import { BuildExecutorSchema } from './schema';
-import { getMapName, prepareConfig } from '../helpers';
+import { getMapName, indexHtml, loadModule, prepareConfig } from '../helpers';
+import { entryPointForExtendDependencies, importMapConfigPlugin, serverSSRPlugin, moveCustomLoaderPlugin } from '../es-plugin';
 
 
 export async function* runBuilder(
@@ -30,10 +32,26 @@ export async function* runBuilder(
     (i) => i.packageName
   );
 
+  const esPluginPromise = optionsMfe.esPlugins.map((item) =>
+    loadModule<Plugin>(item, options.tsConfig, context.logger)
+  );
+
+  const esPlugins = await Promise.all(esPluginPromise);
+  const mainTransform = await indexHtml(optionsMfe);
+
+  const resultEsBuild = [
+    ...esPlugins,
+    entryPointForExtendDependencies(optionsMfe),
+    importMapConfigPlugin(optionsMfe),
+    serverSSRPlugin(optionsMfe.deployUrl),
+    moveCustomLoaderPlugin(),
+  ];
+
   const extensions = {
-    codePlugins: [],
-    indexHtmlTransformer: (input) => {
-      return input;
+    codePlugins: resultEsBuild,
+    indexHtmlTransformer: async (input) => {
+      const mainTransformResult = await mainTransform(input);
+      return optionsMfe.indexHtmlTransformer(mainTransformResult);
     },
   };
 

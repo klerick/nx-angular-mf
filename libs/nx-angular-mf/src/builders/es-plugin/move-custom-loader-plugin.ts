@@ -14,18 +14,14 @@ export function moveCustomLoaderPlugin(): Plugin {
         ...build.initialOptions.entryPoints,
         [customLoaderName]: customLoaderName,
       };
-      build.initialOptions.external = [
-        ...build.initialOptions.external,
-        './server.mjs',
-      ];
       build.onResolve(
         { filter: new RegExp('^' + customLoaderName) },
         ({ kind, path }) => {
-          console.log(kind, path);
           if (kind === 'import-statement') {
             return {
               path: join(pathToCustomLoaderFolder, 'custom-loader.js'),
             };
+
           }
           return {
             path: path,
