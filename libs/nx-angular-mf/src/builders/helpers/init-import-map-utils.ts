@@ -1,3 +1,5 @@
+export const IMPORT_MAP_CONFIG_NAME = 'import-map-config.json';
+
 export function addToPathName(currentPathname, addPathname) {
   return [
     ...currentPathname.split('/').filter((i) => !!i),
@@ -7,7 +9,7 @@ export function addToPathName(currentPathname, addPathname) {
 
 export async function fetchImportMap(host: string) {
   const urlHost = new URL(host);
-  const pathName = addToPathName(urlHost.pathname, 'importmap.json');
+  const pathName = addToPathName(urlHost.pathname, IMPORT_MAP_CONFIG_NAME);
   const url = new URL(pathName, urlHost.origin).toString();
   try {
     const r = await fetch(url);

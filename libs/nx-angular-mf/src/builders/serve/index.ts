@@ -13,7 +13,7 @@ import { Plugin } from 'esbuild';
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
 import { deepMergeObject, getMapName, indexHtml, loadModule, patchBuilderContext, prepareConfig } from '../helpers';
-import { entryPointForExtendDependencies } from '../es-plugin';
+import { entryPointForExtendDependencies, importMapConfigPlugin } from '../es-plugin';
 
 
 function getBuilderAction() {
@@ -86,6 +86,7 @@ export async function* runBuilder(
 
   const resultEsBuild = [
     ...esPlugins,
+    importMapConfigPlugin(optionsMfe),
     entryPointForExtendDependencies(optionsMfe)
   ]
 
