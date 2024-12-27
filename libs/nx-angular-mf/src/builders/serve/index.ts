@@ -13,6 +13,7 @@ import { Plugin } from 'esbuild';
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
 import {
+  addLinkForReload,
   deepMergeObject,
   getMapName,
   getPathForRegister,
@@ -27,6 +28,8 @@ import { CACHE_FILE, CLEAR_REMOTE, IMPORT_MAP } from '../custom-loader/constants
 import { OutputFileRecord } from '../types';
 import process from 'node:process';
 import { loadEsmModule } from '../custom-loader/custom-loader-utils';
+// @ts-expect-error need only type
+import { ViteDevServer } from 'vite';
 
 const { port1, port2 } = new MessageChannel();
 
@@ -165,7 +168,7 @@ export async function* runBuilder(
 
   const transforms = {
     indexHtml: async (input: string) => {
-      const mainTransformResult = await mainTransform(input);
+      const mainTransformResult = await mainTransform(addLinkForReload(input));
       return optionsMfe.indexHtmlTransformer(mainTransformResult);
     },
   };
@@ -186,7 +189,7 @@ export async function* runBuilder(
       },
     });
   }
-
+  let serverFromPatch: ViteDevServer;
   const runServer = serveWithVite(
     normalizeOuterOptions,
     '@angular-devkit/build-angular:application',
@@ -196,6 +199,22 @@ export async function* runBuilder(
     extensions
   );
   for await (const output of runServer) {
+    if (targetOptions['ssr'] && !serverFromPatch) {
+      const serverFromPatch = await loadEsmModule<typeof import('vite')>(
+        'vite'
+      ).then((r) => r.default['serverFromPatch']);
+      serverFromPatch.ws.on('reload:manual', async () => {
+        await reloadDevServer(serverFromPatch);
+        serverFromPatch.ws.send({
+          type: 'full-reload',
+          path: '*',
+        });
+        context.logger.info('Page reload sent to client(s).');
+        port1.postMessage({
+          kind: CLEAR_REMOTE,
+        });
+      });
+    }
     yield output;
   }
 }

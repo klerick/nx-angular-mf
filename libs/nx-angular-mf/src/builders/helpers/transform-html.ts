@@ -99,3 +99,36 @@ export async function indexHtml(
     return serialize(document);
   };
 }
+
+export function addLinkForReload(input: string) {
+  const template = `
+  <div>
+  <a href="#" id="manualReloadDevServerLink">Manual reload dev server</a>
+  <style>
+  #manualReloadDevServerLink {
+    position:absolute;
+    top: 0px;
+    left: 50%;
+  }
+</style>
+  <script type="module">
+  import('/@vite/client').then(r => {
+    document.getElementById('manualReloadDevServerLink').addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation()
+      r.createHotContext('/').send('reload:manual');
+      return false;
+    });
+  })
+
+</script>
+</div>`;
+
+  const linkDiv = parseFragment(template);
+
+  const document = parse(input);
+  const bodyNode = findBody(document);
+  // @ts-ignore
+  bodyNode.childNodes.push(...linkDiv.childNodes);
+  return serialize(document);
+}

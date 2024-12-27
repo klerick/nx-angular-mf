@@ -11,7 +11,7 @@ import {
 } from './custom-loader-utils';
 
 import { Context, DefaultLoad, NextResolve } from './types';
-import { CACHE_FILE, IMPORT_MAP } from './constants';
+import { CACHE_FILE, CLEAR_REMOTE, IMPORT_MAP } from './constants';
 import { join } from 'path';
 import { PREF } from './patch-vite-dev-server';
 import { OutputFileRecord } from '../types';
@@ -37,6 +37,7 @@ let cacheFiles: Map<string, OutputFileRecord> = new Map<
 >();
 const packageNameToImportNameMap = new Map<string, string>();
 
+const remotePackages = new Map<string, string>();
 
 async function getImportMap() {
   if (importMap) return importMap;
@@ -67,6 +68,9 @@ export async function initialize({ port }: { port: MessagePort }) {
           packageNameToImportNameMap.set(value.packageName, value.mapName);
         }
         cacheFilesDeferred.resolve(event.data.result);
+        break;
+      case CLEAR_REMOTE:
+        remotePackages.clear();
         break;
     }
   };
@@ -129,13 +133,21 @@ export async function resolve(
     }
   }
 
-  const specifierUrl = new URL(specifier, fakeRootPath);
-
   const cacheFiles = await getCacheFiles();
+
   const dataFromCache = cacheFiles.get(importMapName);
 
+  const specifierUrl = new URL(specifier, fakeRootPath);
   if (dataFromCache && dataFromCache.hash) {
     specifierUrl.searchParams.set('v', dataFromCache.hash);
+  }
+  if (!importMapName && resolveUrl) {
+    let tmp = remotePackages.get(specifier);
+    if (!remotePackages.has(specifier)) {
+      tmp = Date.now().toString();
+      remotePackages.set(specifier, tmp);
+    }
+    specifierUrl.searchParams.set('v', tmp);
   }
 
   return {
