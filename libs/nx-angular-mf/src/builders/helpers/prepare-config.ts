@@ -55,6 +55,15 @@ export async function prepareConfig(
     );
   }
 
+  if (
+    defaultOptions.exposes &&
+    Object.keys(defaultOptions.exposes).length > 0
+  ) {
+    for (const [key, value] of Object.entries(defaultOptions.exposes)) {
+      exposes[key] = join(workspaceRootPath, value);
+    }
+  }
+
   return {
     skipList: skipList,
     externalList: externalList,

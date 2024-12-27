@@ -15,7 +15,7 @@ export function entryPointForExtendDependencies(config: ConfigMf): Plugin {
           acum[key] = value.entryPoint;
           return acum;
         },
-        { }
+        { ...config.exposes }
       );
 
       delete build.initialOptions.define.ngServerMode;

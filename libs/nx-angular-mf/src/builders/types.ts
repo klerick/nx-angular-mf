@@ -28,4 +28,6 @@ export type MapPackage = Map<
 
 export type DataForImportMap = {
   imports: Record<string, string>;
+  exposes: Record<string, string>;
+  remoteEntry: Record<string, string>;
 };

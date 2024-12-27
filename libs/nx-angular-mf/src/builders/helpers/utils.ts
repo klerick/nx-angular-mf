@@ -54,5 +54,12 @@ export function getDataForImportMap(
 
       return acum;
     }, {}),
+    exposes: Object.entries(mfeConfig.exposes).reduce((acum, [key, val]) => {
+      const resultName =
+        mfeConfig.outPutFileNames.find((i) => i.startsWith(key)) || key + '.js';
+      acum[key] = './' + resultName;
+      return acum;
+    }, {}),
+    remoteEntry: mfeConfig.remoteEntry,
   };
 }

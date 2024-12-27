@@ -4,7 +4,7 @@
     "outDir": "../../dist/out-tsc",
     "types": []
   },
-  "files": ["src/main.ts", "../../libs/nx-angular-mf/src/index.ts"],
+  "files": ["src/main.ts", "../../libs/nx-angular-mf/src/index.ts", "src/app/remote/second/index.ts"],
   "include": ["src/**/*.d.ts"],
   "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }
