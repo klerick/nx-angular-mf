@@ -12,8 +12,19 @@ import { Plugin } from 'esbuild';
 
 import { ServeExecutorSchema } from './schema';
 import { BuildExecutorSchema } from '../build/schema';
-import { deepMergeObject, getMapName, indexHtml, loadModule, patchBuilderContext, prepareConfig } from '../helpers';
+import {
+  deepMergeObject,
+  getMapName,
+  getPathForRegister,
+  indexHtml,
+  loadModule,
+  patchBuilderContext,
+  prepareConfig
+} from '../helpers';
 import { entryPointForExtendDependencies, importMapConfigPlugin } from '../es-plugin';
+import { register } from 'node:module';
+
+const { port1, port2 } = new MessageChannel();
 
 
 function getBuilderAction() {
@@ -112,6 +123,15 @@ export async function* runBuilder(
       return optionsMfe.indexHtmlTransformer(mainTransformResult);
     },
   };
+
+  if (targetOptions['ssr']) {
+    const { parentUrl, fileName } = getPathForRegister('custom-loader-serve');
+    register(fileName, {
+      parentURL: parentUrl,
+      data: { port: port2 },
+      transferList: [port2],
+    });
+  }
 
   const runServer = serveWithVite(
     normalizeOuterOptions,

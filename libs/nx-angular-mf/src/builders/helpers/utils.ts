@@ -1,8 +1,10 @@
 import { getSystemPath, normalize } from '@angular-devkit/core';
 import { workspaceRoot, readJsonFile } from '@nx/devkit';
-import { join } from 'path';
+import { join, sep } from 'path';
 import { ConfigMf, DataForImportMap } from '../types';
 import { getMapName } from './dependencies';
+import { existsSync } from 'fs';
+import { pathToFileURL } from 'node:url';
 
 export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
 
@@ -62,5 +64,20 @@ export function getDataForImportMap(
       return acum;
     }, {}),
     remoteEntry: mfeConfig.remoteEntry,
+  };
+}
+
+export function getPathForRegister(
+  path: 'custom-loader' | 'custom-loader-serve'
+) {
+  const fileName = path + '.js';
+  const pathToFile = join(__dirname, '..', 'custom-loader', fileName);
+  if (!existsSync(pathToFile)) {
+    throw new Error(`File ${fileName} not found`);
+  }
+
+  return {
+    parentUrl: pathToFileURL(pathToFile),
+    fileName: `.${sep}${fileName}`,
   };
 }
