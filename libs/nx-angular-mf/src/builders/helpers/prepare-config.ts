@@ -20,6 +20,7 @@ export async function prepareConfig(
   const remoteEntry: ConfigMf['remoteEntry'] = defaultOptions.remoteEntry || {};
   const exposes: ConfigMf['exposes'] = {};
 
+  let deployUrl = '';
   let indexHtmlTransformer = (input: string) => Promise.resolve(input);
 
   if (defaultOptions.skipList) {
@@ -64,6 +65,10 @@ export async function prepareConfig(
     }
   }
 
+  if (buildOptions.deployUrl) {
+    deployUrl = buildOptions.deployUrl;
+  }
+
   return {
     skipList: skipList,
     externalList: externalList,
@@ -76,7 +81,8 @@ export async function prepareConfig(
     allImportMap: {},
     indexHtmlTransformer,
     remoteEntry,
-    exposes
+    exposes,
+    deployUrl
   };
 }
 

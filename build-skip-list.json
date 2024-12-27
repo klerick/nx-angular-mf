@@ -15,6 +15,7 @@
   "@angular/animations/browser/testing",
   "@angular/common/http/testing",
   "@angular/common/testing",
+  "@angular/common/upgrade",
   "@angular/core/testing",
   "@angular/ssr/node",
   "rxjs/testing",

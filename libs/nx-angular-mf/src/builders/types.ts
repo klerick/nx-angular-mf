@@ -5,6 +5,7 @@ export type ConfigMf = {
   sharedMappings: { key: string; path: string }[];
   outPutFileNames: string[];
   esPlugins: string[];
+  deployUrl: string;
   allImportMap: Record<string, unknown>;
   indexHtmlTransformer: (input: string) => Promise<string>;
   exposes: Record<string, string>;

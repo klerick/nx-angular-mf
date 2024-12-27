@@ -62,6 +62,14 @@ export async function* runBuilder(
     context
   );
 
+  if (!optionsMfe.deployUrl) {
+    const deployUrl = new URL('http://localhost');
+    deployUrl.port = options.port.toString();
+    deployUrl.hostname = options.host;
+    deployUrl.protocol = options.ssl ? 'https' : 'http';
+    optionsMfe.deployUrl = deployUrl.toString();
+  }
+
   const mapShareObject = getMapName(
     optionsMfe.shared,
     optionsMfe.sharedMappings

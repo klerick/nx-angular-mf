@@ -49,9 +49,10 @@ export function getDataForImportMap(
   const mapShareObject = getMapName(mfeConfig.shared, mfeConfig.sharedMappings);
   return {
     imports: [...mapShareObject.entries()].reduce((acum, [key, val]) => {
+      const resultName =
+        mfeConfig.outPutFileNames.find((i) => i.startsWith(key)) || key + '.js';
 
-      acum[val.packageName] = `./${key}.js`;
-
+      acum[val.packageName] = `${mfeConfig.deployUrl}${resultName}`;
       return acum;
     }, {}),
     exposes: Object.entries(mfeConfig.exposes).reduce((acum, [key, val]) => {
