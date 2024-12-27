@@ -32,3 +32,11 @@ export type DataForImportMap = {
   exposes: Record<string, string>;
   remoteEntry: Record<string, string>;
 };
+
+export type OutputFileRecord = {
+  contents: Uint8Array;
+  size: number;
+  hash: string;
+  packageName: string;
+  mapName: string;
+};

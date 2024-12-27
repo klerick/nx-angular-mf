@@ -66,8 +66,9 @@ function removeScriptModules(node) {
 
 export async function indexHtml(
   mfeConfig: ConfigMf,
+  isDev = false
 ): Promise<(input: string) => Promise<string>> {
-  const dataImport = getDataForImportMap(mfeConfig);
+  const dataImport = getDataForImportMap(mfeConfig, isDev);
   const allImportMap = await getResultImportMap(dataImport);
   mfeConfig.allImportMap = allImportMap;
   return async (input: string) => {

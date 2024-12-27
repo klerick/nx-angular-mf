@@ -23,11 +23,17 @@ import {
 } from '../helpers';
 import { entryPointForExtendDependencies, importMapConfigPlugin } from '../es-plugin';
 import { register } from 'node:module';
+import { CACHE_FILE, IMPORT_MAP } from '../custom-loader/constants';
+import { OutputFileRecord } from '../types';
 
 const { port1, port2 } = new MessageChannel();
 
+const fileFromEsBuild = new Map<string, OutputFileRecord>();
 
-function getBuilderAction() {
+function getBuilderAction(
+  mapShareObject: Map<string, { packageName: string; entryPoint: string }>,
+  ssr: boolean
+) {
   return async function* (options, context, pluginsOrExtensions) {
 
     let extensions;
@@ -44,6 +50,26 @@ function getBuilderAction() {
       context,
       extensions
     )) {
+      if (!ssr || result.kind !== 1) {
+        yield result;
+        continue;
+      }
+
+      for (const [key, file] of Object.entries(result.files)) {
+        if (key.endsWith('.js.map')) continue;
+        const name = key.split('.').at(0);
+        const shareObject = mapShareObject.get(name);
+        if (file.origin === 'memory' && shareObject) {
+          fileFromEsBuild.set(name, {
+            contents: file.contents,
+            size: file.contents.byteLength,
+            packageName: shareObject.packageName,
+            mapName: name,
+            hash: file.hash,
+          });
+        }
+      }
+      port1.postMessage({ kind: CACHE_FILE, result: fileFromEsBuild });
       yield result;
     }
   };
@@ -105,7 +131,7 @@ export async function* runBuilder(
 
   const resultEsBuild = [
     ...esPlugins,
-    importMapConfigPlugin(optionsMfe),
+    importMapConfigPlugin(optionsMfe, true),
     entryPointForExtendDependencies(optionsMfe)
   ]
 
@@ -114,7 +140,7 @@ export async function* runBuilder(
     buildPlugins: resultEsBuild,
   };
 
-  const mainTransform = await indexHtml(optionsMfe);
+  const mainTransform = await indexHtml(optionsMfe, true);
 
 
   const transforms = {
@@ -131,12 +157,20 @@ export async function* runBuilder(
       data: { port: port2 },
       transferList: [port2],
     });
+
+    port1.postMessage({
+      kind: IMPORT_MAP,
+      result: {
+        importMap: optionsMfe.allImportMap,
+        rootUrlHost: optionsMfe.deployUrl,
+      },
+    });
   }
 
   const runServer = serveWithVite(
     normalizeOuterOptions,
     '@angular-devkit/build-angular:application',
-    getBuilderAction(),
+    getBuilderAction(mapShareObject, !!targetOptions['ssr']),
     context,
     transforms,
     extensions

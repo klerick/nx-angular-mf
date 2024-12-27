@@ -3,7 +3,7 @@ import { sep } from 'path';
 import { ConfigMf } from '../types';
 import { getDataForImportMap, IMPORT_MAP_CONFIG_NAME } from '../helpers';
 
-export function importMapConfigPlugin(config: ConfigMf): Plugin {
+export function importMapConfigPlugin(config: ConfigMf, isDev = false): Plugin {
   return {
     name: 'importMapConfig',
     setup(build: PluginBuild) {
@@ -36,7 +36,7 @@ export function importMapConfigPlugin(config: ConfigMf): Plugin {
           (i) => i.path.includes(name) && !i.path.endsWith('.map')
         );
         importMapResult.contents = new TextEncoder().encode(
-          JSON.stringify(getDataForImportMap(config))
+          JSON.stringify(getDataForImportMap(config, isDev))
         );
 
         const pathsArray = importMapResult.path.split(sep);

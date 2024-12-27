@@ -5,6 +5,7 @@ import { ConfigMf, DataForImportMap } from '../types';
 import { getMapName } from './dependencies';
 import { existsSync } from 'fs';
 import { pathToFileURL } from 'node:url';
+import { PREF } from '../custom-loader/patch-vite-dev-server';
 
 export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
 
@@ -47,6 +48,7 @@ export function deepMergeObject(targetObject = {}, sourceObject = {}) {
 
 export function getDataForImportMap(
   mfeConfig: ConfigMf,
+  isDev = false
 ): DataForImportMap {
   const mapShareObject = getMapName(mfeConfig.shared, mfeConfig.sharedMappings);
   return {
@@ -54,7 +56,11 @@ export function getDataForImportMap(
       const resultName =
         mfeConfig.outPutFileNames.find((i) => i.startsWith(key)) || key + '.js';
 
+      if (isDev) {
+        acum[PREF + val.packageName] = `${mfeConfig.deployUrl}${resultName}`;
+      }
       acum[val.packageName] = `${mfeConfig.deployUrl}${resultName}`;
+
       return acum;
     }, {}),
     exposes: Object.entries(mfeConfig.exposes).reduce((acum, [key, val]) => {
