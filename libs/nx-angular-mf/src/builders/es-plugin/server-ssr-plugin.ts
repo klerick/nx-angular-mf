@@ -1,5 +1,6 @@
 import { Plugin, PluginBuild } from 'esbuild';
 import { DEPLOY_URL } from '../custom-loader/custom-loader';
+import { CUSTOM_LOADER_NAME } from './move-custom-loader-plugin';
 
 
 export function serverSSRPlugin(deployUrl: string): Plugin {
@@ -34,7 +35,7 @@ export function serverSSRPlugin(deployUrl: string): Plugin {
           contents: `
             import {register} from "node:module";
             const { port1, port2 } = new MessageChannel();
-            register('./custom-loader.mjs', {
+            register('./${CUSTOM_LOADER_NAME}.mjs', {
               parentURL: import.meta.url,
               data: { port: port2 },
               transferList: [port2],
