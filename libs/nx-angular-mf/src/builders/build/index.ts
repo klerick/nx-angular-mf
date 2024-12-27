@@ -15,6 +15,12 @@ export async function* runBuilder(
 
   const optionsMfe = await prepareConfig(defaultOptionsMfe, options, context);
 
+  if (!optionsMfe.deployUrl) {
+    throw new Error(
+      'Deploy url is not defined. It is necessary for MFE. You should "deployUrl" options or set "deployUrlEnvName" in your config'
+    );
+  }
+
   const mapShareObject = getMapName(
     optionsMfe.shared,
     optionsMfe.sharedMappings
