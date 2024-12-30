@@ -21,6 +21,20 @@ export function entryPointForExtendDependencies(config: ConfigMf): Plugin {
       delete build.initialOptions.define.ngServerMode;
       build.initialOptions.splitting = false;
 
+      if (build.initialOptions.entryPoints['server']) {
+        build.onResolve({ filter: /./ }, (data) => {
+          const { path } = data;
+          if (path === '@angular/ssr/node') {
+            return {
+              path: require.resolve('@angular/ssr/node', {
+                paths: [process.cwd()],
+              }),
+            };
+          }
+          return null;
+        });
+      }
+
       if (build.initialOptions.platform !== 'browser') return;
 
       build.onEnd((resultBuild) => {
