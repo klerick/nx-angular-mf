@@ -62,7 +62,7 @@
           "sourceMap": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "development"
     },
     "serve": {
       "dependsOn": ["^build"],
@@ -93,10 +93,22 @@
         "jestConfig": "apps/host-application/jest.config.ts"
       }
     },
+    "build-static": {
+      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp dist/apps/host-application/browser/index.csr.html dist/apps/host-application/browser/index.html",
+          "touch dist/apps/host-application/browser/404.html"
+        ],
+        "parallel": false
+      }
+    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "host-application:build",
+        "buildTarget": "host-application:build-static",
+        "port": 4200,
         "staticFilePath": "dist/apps/host-application/browser",
         "spa": true
       }
