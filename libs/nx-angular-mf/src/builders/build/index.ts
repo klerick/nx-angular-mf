@@ -4,8 +4,13 @@ import { Plugin } from 'esbuild';
 
 import { BuildExecutorSchema } from './schema';
 import { getMapName, indexHtml, loadModule, prepareConfig } from '../helpers';
-import { entryPointForExtendDependencies, importMapConfigPlugin, serverSSRPlugin, moveCustomLoaderPlugin } from '../es-plugin';
-
+import {
+  entryPointForExtendDependencies,
+  importMapConfigPlugin,
+  serverSSRPlugin,
+  moveCustomLoaderPlugin,
+  changePathForAngularSsrNode,
+} from '../es-plugin';
 
 export async function* runBuilder(
   options: BuildExecutorSchema,
@@ -45,6 +50,7 @@ export async function* runBuilder(
     importMapConfigPlugin(optionsMfe),
     serverSSRPlugin(optionsMfe.deployUrl),
     moveCustomLoaderPlugin(),
+    changePathForAngularSsrNode(),
   ];
   // @ts-ignore
   defaultOptions.partialSSRBuild = true;
