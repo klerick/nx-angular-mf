@@ -29,7 +29,7 @@ npm install @klerick/nx-angular-mf
  ```
 ### Usage
 
-Update your project.json or angular.json file to use the custom builder:
+Update your project.json file to use the custom builder:
 
 ```json
 {
