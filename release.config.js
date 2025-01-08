@@ -23,7 +23,7 @@ module.exports = {
       {
         packages: [
           {
-            pkgRoot: 'dist/libs/ng-pixijs',
+            pkgRoot: 'dist/libs/nx-angular-mf',
           },
         ],
       },
@@ -40,7 +40,7 @@ module.exports = {
           'homepage',
           'license',
         ],
-        packages: ['dist/libs/ng-pixijs'],
+        packages: ['dist/libs/nx-angular-mf'],
       },
     ],
     [
