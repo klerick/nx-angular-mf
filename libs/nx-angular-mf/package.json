@@ -2,8 +2,13 @@
   "name": "@klerick/nx-angular-mf",
   "version": "0.0.1",
   "dependencies": {
-    "@nx/devkit": "20.3.0",
-    "tslib": "^2.3.0"
+    "@jspm/import-map": "^1.1.0",
+    "enhanced-resolve": "^5.18.0",
+    "@nx/devkit": ">=20.0.0",
+    "@angular-devkit/build-angular": ">=19.0.0 <20.0.0",
+    "@angular/ssr": ">=19.0.0 <20.0.0",
+    "@angular/build": ">=19.0.0 <20.0.0",
+    "ts-node": "^10.9.0"
   },
   "type": "commonjs",
   "main": "./src/index.js",

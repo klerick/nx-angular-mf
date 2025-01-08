@@ -128,7 +128,7 @@ export function addLinkForReload(input: string) {
 
   const document = parse(input);
   const bodyNode = findBody(document);
-  // @ts-ignore
+  // @ts-expect-error need use dom type in modejs
   bodyNode.childNodes.push(...linkDiv.childNodes);
   return serialize(document);
 }

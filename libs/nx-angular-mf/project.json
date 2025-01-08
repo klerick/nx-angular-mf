@@ -11,7 +11,6 @@
       }
     }
   },
-  "tags": [],
   "targets": {
     "merge-schemes": {
       "executor": "nx:run-commands",
@@ -71,5 +70,9 @@
         "jestConfig": "libs/nx-angular-mf/jest.config.ts"
       }
     }
+  },
+  "tags": ["type:lib", "lib:nx-angular-mf"],
+  "publishConfig": {
+    "access": "public"
   }
 }

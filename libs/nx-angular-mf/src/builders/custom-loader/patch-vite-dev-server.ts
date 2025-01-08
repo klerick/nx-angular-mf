@@ -1,20 +1,7 @@
-import {
-  // @ts-ignore
-  createServer as createServerVite,
-  // @ts-ignore
-  InlineConfig,
-  // @ts-ignore
-  Plugin,
-  // @ts-ignore
-  normalizePath as normalizePathVite,
-  // @ts-ignore
-  ViteDevServer,
-  // @ts-ignore
-  PreviewServer,
-  // @ts-ignore
-  ResolvedConfig,
-  // @ts-ignore
-} from 'vite';
+// @ts-expect-error fix import
+import { createServer as createServerVite, InlineConfig } from 'vite';
+// @ts-expect-error fix import
+import { Plugin, normalizePath as normalizePathVite, ViteDevServer} from 'vite'
 
 export const PREF = 'http://';
 const external = [];
@@ -44,9 +31,6 @@ function customNodeImportPlugin(): Plugin {
   return {
     enforce: 'pre',
     name: 'vite:custom-node-import',
-    async resolveId(source, importer, options) {},
-    async configResolved(config: ResolvedConfig) {},
-    async load(id) {},
     async transform(code, id) {
       const regex = new RegExp(
         `(["'])(${external.join('|').replace('*/main.server.mjs|', '')})\\1`,
@@ -56,9 +40,6 @@ function customNodeImportPlugin(): Plugin {
         return `${p1}${PREF}${p2}${p1}`;
       });
     },
-
-    async configureServer(server: ViteDevServer) {},
-    async configurePreviewServer(server: PreviewServer) {},
   };
 }
 

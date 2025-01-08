@@ -52,7 +52,7 @@ export async function* runBuilder(
     moveCustomLoaderPlugin(),
     changePathForAngularSsrNode(),
   ];
-  // @ts-ignore
+  // @ts-expect-error it private var
   defaultOptions.partialSSRBuild = true;
 
   const extensions = {

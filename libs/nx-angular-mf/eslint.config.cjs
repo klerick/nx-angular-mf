@@ -9,6 +9,15 @@ module.exports = [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs}'],
+          ignoredDependencies: [
+            '@angular-devkit/architect',
+            'esbuild',
+            'vite',
+            '@angular-devkit/core',
+            'tsconfig-paths',
+            'parse5',
+            "tslib"
+          ],
         },
       ],
     },
