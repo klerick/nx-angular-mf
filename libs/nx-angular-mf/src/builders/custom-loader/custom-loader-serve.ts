@@ -113,7 +113,7 @@ export async function resolve(
   const resolveUrl = resolveModulePath(importMap, specifier, parentURL);
 
   if (checkIfNodeProtocol(resolveUrl) || checkIfFileProtocol(resolveUrl)) {
-    return nextResolve(specifier, context, nextResolve);
+    return nextResolve(specifier.replace('@fs/', ''), context, nextResolve);
   }
 
   if (!importMapName && !resolveUrl) {

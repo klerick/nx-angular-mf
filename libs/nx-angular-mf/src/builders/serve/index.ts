@@ -20,12 +20,20 @@ import {
   indexHtml,
   loadModule,
   patchBuilderContext,
-  prepareConfig, reloadDevServer
+  prepareConfig,
+  reloadDevServer,
 } from '../helpers';
-import { entryPointForExtendDependencies, importMapConfigPlugin } from '../es-plugin';
+import {
+  entryPointForExtendDependencies,
+  importMapConfigPlugin,
+} from '../es-plugin';
 import { register } from 'node:module';
-import { CACHE_FILE, CLEAR_REMOTE, IMPORT_MAP } from '../custom-loader/constants';
-import { OutputFileRecord } from '../types';
+import {
+  CACHE_FILE,
+  CLEAR_REMOTE,
+  IMPORT_MAP,
+} from '../custom-loader/constants';
+import { ConfigMf, OutputFileRecord } from '../types';
 import process from 'node:process';
 import { loadEsmModule } from '../custom-loader/custom-loader-utils';
 // @ts-expect-error need only type
@@ -40,7 +48,6 @@ function getBuilderAction(
   ssr: boolean
 ) {
   return async function* (options, context, pluginsOrExtensions) {
-
     let extensions;
     if (pluginsOrExtensions && Array.isArray(pluginsOrExtensions)) {
       extensions = {
@@ -104,7 +111,7 @@ export async function* runBuilder(
 ) {
   context.logger.info('Run serve mf');
 
-  const {mf: defaultOptionsMfe, ...defaultOptions} = options;
+  const { mf: defaultOptionsMfe, ...defaultOptions } = options;
 
   const buildTarget = targetFromTargetString(options.buildTarget);
   const targetOptions = (await context.getTargetOptions(
@@ -147,16 +154,27 @@ export async function* runBuilder(
     defaultOptions
   );
 
-  const esPluginPromise = optionsMfe.esPlugins.map((item) =>
-    loadModule<Plugin>(item, targetOptions.tsConfig, context.logger)
-  );
+  type FunctionEsPlugin = (config: ConfigMf) => Promise<Plugin>;
+
+  const esPluginPromise = optionsMfe.esPlugins.map((item) => {
+    return loadModule<Plugin | FunctionEsPlugin>(
+      item,
+      targetOptions.tsConfig,
+      context.logger
+    ).then(r => {
+      if (typeof r === 'function') {
+        return r(optionsMfe)
+      }
+      return r;
+    });
+  });
   const esPlugins = await Promise.all(esPluginPromise);
 
   const resultEsBuild = [
     ...esPlugins,
     importMapConfigPlugin(optionsMfe, true),
-    entryPointForExtendDependencies(optionsMfe)
-  ]
+    entryPointForExtendDependencies(optionsMfe),
+  ];
 
   const extensions = {
     middleware: [],
@@ -165,10 +183,11 @@ export async function* runBuilder(
 
   const mainTransform = await indexHtml(optionsMfe, true);
 
-
   const transforms = {
     indexHtml: async (input: string) => {
-      const mainTransformResult = await mainTransform(addLinkForReload(input));
+      const mainTransformResult = await mainTransform(
+        targetOptions['ssr'] ? addLinkForReload(input) : input
+      );
       return optionsMfe.indexHtmlTransformer(mainTransformResult);
     },
   };
