@@ -82,7 +82,7 @@ Here’s an example of how the configuration might look in practice:
 {
   "skipList": ["dependency-to-skip"] // or 'dependency-to-skip.json',
   "externalList": ["@angular/core", "@angular/platform-browser"], // or 'external-list-dependency.json',
-  "esPlugins": ["path/to/esbuild/plugin1.ts", "path/to/esbuild/plugin2.ts"],
+  "esPlugins": ["path/to/esbuild/plugin1.ts", "path/to/esbuild/plugin2.ts"], // should be export default Plugin or () => Promise<Plugin> 
   "indexHtmlTransformer": "path/to/transform-index.ts",
   "exposes": {
     "./ComponentA": "./src/component-a.ts"
@@ -94,6 +94,9 @@ Here’s an example of how the configuration might look in practice:
 }
 
 ```
+- Module with `esPlugins` should be export `Plugin` as default of  `(configMf: ConfigMf) => Promise<Plugin>` as default too.
+- Module with `indexHtmlTransformer` should be export `(input: string) => string` as default
+
 This configuration excludes a dependency from processing, treats Angular core modules as external, includes custom plugins, modifies index.html, exposes a component, specifies a remote entry, and supports deployment via an environment variable.
 
 ### Import dinamic remote module
