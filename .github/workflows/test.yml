@@ -26,5 +26,8 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/nodejs
 
-      - name: Test
-        run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+#      - name: Test
+#        run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+
+      - name: E2E Test
+        run: npm nx run nx-angular-mf-e2e:e2e

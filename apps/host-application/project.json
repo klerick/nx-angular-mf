@@ -18,7 +18,8 @@
           "esPlugins": ["tools/esbuild-plugin/test-external-plugin.ts"],
           "remoteEntry": {
             "firstRemote": "http://localhost:4201/"
-          }
+          },
+          "deployUrlEnvName": "DEPLOY_URL"
         },
         "deployUrl": "http://localhost:4200/",
         "outputPath": "dist/apps/host-application",
