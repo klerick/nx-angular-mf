@@ -1,3 +1,7 @@
+import type { ImportMap } from '@jspm/import-map';
+import process from 'node:process';
+import { join } from 'node:path';
+
 import type { Context, NextResolve } from './types';
 import {
   checkIfFileProtocol,
@@ -5,14 +9,10 @@ import {
   DeferredPromise,
   resolveModulePath,
 } from './custom-loader-utils';
-import { getResultImportMap, IMPORT_MAP_CONFIG_NAME } from '../helpers/init-import-map-utils';
-import { pathToFileURL } from 'url';
-// @ts-expect-error should be esm
-import type { ImportMap } from '@jspm/import-map';
-import process from 'node:process';
-import { join } from 'path';
 
-export const DEPLOY_URL = 'DEPLOY_URL';
+import { getResultImportMap } from '../helpers/init-import-map-utils';
+import { pathToFileURL } from 'node:url';
+import { IMPORT_MAP_CONFIG_NAME, DEPLOY_URL } from './constants';
 
 const deferredInit = new DeferredPromise<ImportMap>();
 

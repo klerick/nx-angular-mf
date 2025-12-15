@@ -1,6 +1,5 @@
 import { Plugin, PluginBuild } from 'esbuild';
-import { DEPLOY_URL } from '../custom-loader/custom-loader';
-import { CUSTOM_LOADER_NAME } from './move-custom-loader-plugin';
+import { DEPLOY_URL, CUSTOM_LOADER_NAME } from '../custom-loader/constants';
 
 
 export function serverSSRPlugin(deployUrl: string): Plugin {

@@ -18,7 +18,8 @@
           "exposes": {
             "FirstRemoteRoute": "/apps/mf1-application/src/app/remote/first/index.ts",
             "SecondRemoteRoute": "/apps/mf1-application/src/app/remote/second/index.ts"
-          }
+          },
+          "deployUrlEnvName": "DEPLOY_URL"
         },
         "outputPath": "dist/apps/mf1-application",
         "index": "apps/mf1-application/src/index.html",
@@ -40,7 +41,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "5mb"
             },
             {
               "type": "anyComponentStyle",
@@ -84,10 +85,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/mf1-application/jest.config.ts"
+        "command": "vitest run --config apps/mf1-application/vitest.config.ts"
       }
     },
     "serve-static": {

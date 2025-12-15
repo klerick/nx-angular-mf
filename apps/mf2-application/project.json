@@ -52,6 +52,9 @@
     "serve": {
       "dependsOn": ["^build"],
       "executor": "./dist/libs/nx-angular-mf:serve",
+      "options": {
+        "port": 4202
+      },
       "configurations": {
         "production": {
           "buildTarget": "mf2-application:build:production"
@@ -72,10 +75,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/mf2-application/jest.config.ts"
+        "command": "vitest run --config apps/mf2-application/vitest.config.ts"
       }
     },
     "serve-static": {
