@@ -1,9 +1,9 @@
-// @ts-expect-error fix import
-import { createServer as createServerVite, InlineConfig } from 'vite';
-// @ts-expect-error fix import
-import { Plugin, normalizePath as normalizePathVite, ViteDevServer} from 'vite'
-
-export const PREF = 'http://';
+import {
+  createServer as createServerVite,
+  normalizePath as normalizePathVite,
+} from 'vite';
+import type { Plugin, InlineConfig, ViteDevServer } from 'vite';
+import { PREF } from './constants';
 const external = [];
 
 export let serverFromPatch: ViteDevServer;

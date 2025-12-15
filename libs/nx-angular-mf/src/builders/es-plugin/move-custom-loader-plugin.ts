@@ -1,7 +1,6 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import { Plugin, PluginBuild } from 'esbuild';
-
-export const CUSTOM_LOADER_NAME = 'custom-loader';
+import { CUSTOM_LOADER_NAME } from '../custom-loader/constants';
 
 export function moveCustomLoaderPlugin(): Plugin {
   const pathToCustomLoaderFolder = join(__dirname, '../custom-loader');

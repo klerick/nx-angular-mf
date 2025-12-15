@@ -6,7 +6,7 @@
   "properties": {
     "assets": {
       "type": "array",
-      "description": "List of static application assets.",
+      "description": "Define the assets to be copied to the output directory. These assets are copied as-is without any further processing or hashing.",
       "default": [],
       "items": {
         "$ref": "#/definitions/assetPattern"
@@ -17,7 +17,6 @@
       "description": "The full path for the browser entry point to the application, relative to the current workspace."
     },
     "server": {
-      "type": "string",
       "description": "The full path for the server entry point to the application, relative to the current workspace.",
       "oneOf": [
         {
@@ -205,7 +204,7 @@
       "additionalProperties": false
     },
     "externalDependencies": {
-      "description": "Exclude the listed external dependencies from being bundled into the bundle. Instead, the created bundle relies on these dependencies to be available during runtime.",
+      "description": "Exclude the listed external dependencies from being bundled into the bundle. Instead, the created bundle relies on these dependencies to be available during runtime. Note: `@foo/bar` marks all paths within the `@foo/bar` package as external, including sub-paths like `@foo/bar/baz`.",
       "type": "array",
       "items": {
         "type": "string"
@@ -289,7 +288,7 @@
       ]
     },
     "loader": {
-      "description": "Defines the type of loader to use with a specified file extension when used with a JavaScript `import`. `text` inlines the content as a string; `binary` inlines the content as a Uint8Array; `file` emits the file and provides the runtime location of the file; `empty` considers the content to be empty and not include it in bundles.",
+      "description": "Defines the type of loader to use with a specified file extension when used with a JavaScript `import`. `text` inlines the content as a string; `binary` inlines the content as a Uint8Array; `file` emits the file and provides the runtime location of the file; `dataurl` inlines the content as a data URL with best guess of MIME type; `base64` inlines the content as a Base64-encoded string; `empty` considers the content to be empty and not include it in bundles.",
       "type": "object",
       "patternProperties": {
         "^\\.\\S+$": {
@@ -297,6 +296,8 @@
             "text",
             "binary",
             "file",
+            "dataurl",
+            "base64",
             "empty"
           ]
         }
@@ -306,6 +307,13 @@
       "description": "Defines global identifiers that will be replaced with a specified constant value when found in any JavaScript or TypeScript code including libraries. The value will be used directly. String values must be put in quotes. Identifiers within Angular metadata such as Component Decorators will not be replaced.",
       "type": "object",
       "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "conditions": {
+      "description": "Custom package resolution conditions used to resolve conditional exports/imports. Defaults to ['module', 'development'/'production']. The following special conditions are always present if the requirements are satisfied: 'default', 'import', 'require', 'browser', 'node'.",
+      "type": "array",
+      "items": {
         "type": "string"
       }
     },
@@ -388,6 +396,11 @@
               "type": "boolean",
               "description": "Resolve vendor packages source maps.",
               "default": false
+            },
+            "sourcesContent": {
+              "type": "boolean",
+              "description": "Output original source content for files within the source map.",
+              "default": true
             }
           },
           "additionalProperties": false
@@ -456,7 +469,7 @@
     },
     "outputHashing": {
       "type": "string",
-      "description": "Define the output filename cache-busting hashing mode.",
+      "description": "Define the output filename cache-busting hashing mode.\n\n- `none`: No hashing.\n- `all`: Hash for all output bundles. \n- `media`: Hash for all output media (e.g., images, fonts, etc. that are referenced in CSS files).\n- `bundles`: Hash for output of lazy and main bundles.",
       "default": "none",
       "enum": [
         "none",
@@ -640,7 +653,7 @@
     },
     "outputMode": {
       "type": "string",
-      "description": "Defines the build output target. 'static': Generates a static site for deployment on any static hosting service. 'server': Produces an application designed for deployment on a server that supports server-side rendering (SSR).",
+      "description": "Defines the type of build output artifact. 'static': Generates a static site build artifact for deployment on any static hosting service. 'server': Generates a server application build artifact, required for applications using hybrid rendering or APIs.",
       "enum": [
         "static",
         "server"
@@ -705,9 +718,6 @@
   },
   "additionalProperties": false,
   "required": [
-    "outputPath",
-    "index",
-    "browser",
     "tsConfig"
   ],
   "definitions": {

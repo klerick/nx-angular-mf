@@ -1,4 +1,3 @@
-// @ts-expect-error only for types
 import type { ImportMap } from '@jspm/import-map';
 import resolver from 'enhanced-resolve';
 

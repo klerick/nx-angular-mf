@@ -1,6 +1,7 @@
-// @ts-expect-error only for types
 import { ImportMap, IImportMap } from '@jspm/import-map';
-import { pathToFileURL } from 'url';
+import { pathToFileURL } from 'node:url';
+import { join } from 'node:path';
+
 import {
   loadEsmModule,
   DeferredPromise,
@@ -11,11 +12,15 @@ import {
 } from './custom-loader-utils';
 
 import { Context, DefaultLoad, NextResolve } from './types';
-import { CACHE_FILE, CLEAR_REMOTE, IMPORT_MAP } from './constants';
-import { join } from 'path';
-import { PREF } from './patch-vite-dev-server';
+import {
+  CACHE_FILE,
+  CLEAR_REMOTE,
+  IMPORT_MAP,
+  PREF,
+  IMPORT_MAP_CONFIG_NAME,
+} from './constants';
 import { OutputFileRecord } from '../types';
-import { getResultImportMap, IMPORT_MAP_CONFIG_NAME } from '../helpers';
+import { getResultImportMap } from '../helpers/init-import-map-utils';
 
 const fakeRootPath = pathToFileURL('tmp/file/').href;
 const mapUrlDeferred = new DeferredPromise<{

@@ -36,7 +36,6 @@ import {
 import { ConfigMf, OutputFileRecord } from '../types';
 import process from 'node:process';
 import { loadEsmModule } from '../custom-loader/custom-loader-utils';
-// @ts-expect-error need only type
 import { ViteDevServer } from 'vite';
 
 const { port1, port2 } = new MessageChannel();
@@ -96,9 +95,9 @@ function getBuilderAction(
 }
 
 async function handleUpdate() {
-  const server = await loadEsmModule<typeof import('vite')>('vite').then(
-    (r) => r.default['serverFromPatch']
-  );
+  const server = await loadEsmModule<
+    typeof import('vite') & { default: { serverFromPatch: ViteDevServer } }
+  >('vite').then((r) => r.default.serverFromPatch);
   port1.postMessage({
     kind: CLEAR_REMOTE,
   });
@@ -219,9 +218,10 @@ export async function* runBuilder(
   );
   for await (const output of runServer) {
     if (targetOptions['ssr'] && !serverFromPatch) {
-      const serverFromPatch = await loadEsmModule<typeof import('vite')>(
-        'vite'
-      ).then((r) => r.default['serverFromPatch']);
+      const serverFromPatch = await loadEsmModule<
+        typeof import('vite') & { default: { serverFromPatch: ViteDevServer } }
+      >('vite').then((r) => r.default.serverFromPatch);
+
       serverFromPatch.ws.on('reload:manual', async () => {
         await reloadDevServer(serverFromPatch);
         serverFromPatch.ws.send({

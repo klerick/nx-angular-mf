@@ -1,15 +1,16 @@
+import type { ɵdestroyAngularServerApp as destroyAngularServerApp } from '@angular/ssr';
 import { getSystemPath, normalize } from '@angular-devkit/core';
 import { workspaceRoot, readJsonFile, normalizePath } from '@nx/devkit';
-import { join, sep } from 'path';
+
+import { type ViteDevServer } from 'vite';
+
+import { join, sep } from 'node:path';
+import { existsSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import { PREF } from '../custom-loader/constants';
 import { ConfigMf, DataForImportMap } from '../types';
 import { getMapName } from './dependencies';
-import { existsSync } from 'fs';
-import { pathToFileURL } from 'node:url';
-import { PREF } from '../custom-loader/patch-vite-dev-server';
-// @ts-expect-error need only type
-import { ViteDevServer } from 'vite';
-// @ts-expect-error need only type
-import type { ɵdestroyAngularServerApp as destroyAngularServerApp } from '@angular/ssr';
+
 
 export const workspaceRootPath = getSystemPath(normalize(workspaceRoot));
 
