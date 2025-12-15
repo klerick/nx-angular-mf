@@ -12,5 +12,5 @@
     "../../libs/nx-angular-mf/src/index.ts"
   ],
   "include": ["src/**/*.d.ts"],
-  "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
+  "exclude": ["vitest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }

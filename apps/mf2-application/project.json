@@ -75,11 +75,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/mf2-application/jest.config.ts",
-        "tsConfig": "apps/mf2-application/tsconfig.spec.json"
+        "command": "vitest run --config apps/mf2-application/vitest.config.ts"
       }
     },
     "serve-static": {
