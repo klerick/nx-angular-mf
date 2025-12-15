@@ -1,5 +1,4 @@
 import { spawn, ChildProcess } from 'node:child_process';
-import { createConnection } from 'node:net';
 
 interface ServerInfo {
   process: ChildProcess;
@@ -8,26 +7,26 @@ interface ServerInfo {
 
 const servers: ServerInfo[] = [];
 
-const waitForPort = (port: number, timeout = 60000): Promise<void> => {
+const waitForHttp = (url: string, timeout = 180000): Promise<void> => {
   return new Promise((resolve, reject) => {
     const startTime = Date.now();
 
-    const check = () => {
-      const socket = createConnection({ port, host: 'localhost' });
-
-      socket.on('connect', () => {
-        socket.destroy();
-        resolve();
-      });
-
-      socket.on('error', () => {
-        socket.destroy();
-        if (Date.now() - startTime > timeout) {
-          reject(new Error(`Timeout waiting for port ${port}`));
-        } else {
-          setTimeout(check, 500);
+    const check = async () => {
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          resolve();
+          return;
         }
-      });
+      } catch {
+        // Server not ready
+      }
+
+      if (Date.now() - startTime > timeout) {
+        reject(new Error(`Timeout waiting for ${url}`));
+      } else {
+        setTimeout(check, 2000);
+      }
     };
 
     check();
@@ -49,8 +48,8 @@ const runServe = async (app: string, port: number) => {
     pid: server.pid!,
   });
 
-  await waitForPort(port);
-  console.log(`Server "${app}" started on port ${port}`);
+  await waitForHttp(`http://localhost:${port}/`);
+  console.log(`Server "${app}" ready on port ${port}`);
 };
 
 export async function setup() {
