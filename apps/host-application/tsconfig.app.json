@@ -2,9 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [
-      "node"
-    ]
+    "types": ["node"],
+    "moduleResolution": "bundler"
   },
   "files": [
     "src/main.ts",
@@ -12,12 +11,6 @@
     "src/server.ts",
     "../../libs/test-shared-library/src/index.ts"
   ],
-  "include": [
-    "src/**/*.d.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts"
-  ]
+  "include": ["src/**/*.d.ts"],
+  "exclude": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }

@@ -1,6 +1,7 @@
 # @klerick/nx-angular-mf
 
 - [Readme about lib](./libs/nx-angular-mf/README.md)
+- [Article about this project](https://dev.to/klerick/custom-builder-for-angular-my-way-12hd)
 
 
 ## Local Development
