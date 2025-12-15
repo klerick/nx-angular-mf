@@ -1,3 +1,17 @@
+# [20.0.0](https://github.com/klerick/nx-angular-mf/compare/v19.1.0...v20.0.0) (2025-12-15)
+
+
+### Features
+
+* before update ([88e4c7b](https://github.com/klerick/nx-angular-mf/commit/88e4c7b5d2db60b57df6dd6ea9cb526499375f27))
+* **nx-angular-mf:** E2E test ([a2e0147](https://github.com/klerick/nx-angular-mf/commit/a2e0147dcacf61c8dba95560112c6195fcabf8c9))
+* **nx-angular-mf:** Update to angular 20 ([8660a52](https://github.com/klerick/nx-angular-mf/commit/8660a52b9c6f31ac347c76d7d53f5c369335354b))
+
+
+### BREAKING CHANGES
+
+* **nx-angular-mf:** update dependencies
+
 # [19.2.0](https://github.com/klerick/nx-angular-mf/compare/v19.1.0...v19.2.0) (2025-12-15)
 
 
