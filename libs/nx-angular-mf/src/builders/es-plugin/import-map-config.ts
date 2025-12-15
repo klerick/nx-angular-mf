@@ -1,7 +1,8 @@
 import { Plugin, PluginBuild } from 'esbuild';
-import { sep } from 'path';
+import { sep } from 'node:path';
 import { ConfigMf } from '../types';
-import { getDataForImportMap, IMPORT_MAP_CONFIG_NAME } from '../helpers';
+import { getDataForImportMap } from '../helpers';
+import { IMPORT_MAP_CONFIG_NAME } from '../custom-loader/constants';
 
 export function importMapConfigPlugin(config: ConfigMf, isDev = false): Plugin {
   return {

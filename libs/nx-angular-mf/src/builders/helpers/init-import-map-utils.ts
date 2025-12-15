@@ -1,4 +1,4 @@
-export const IMPORT_MAP_CONFIG_NAME = 'import-map-config.json';
+import { IMPORT_MAP_CONFIG_NAME } from '../custom-loader/constants';
 
 export function addToPathName(currentPathname, addPathname) {
   return [

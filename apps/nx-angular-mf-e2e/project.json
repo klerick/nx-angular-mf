@@ -6,11 +6,10 @@
   "implicitDependencies": ["nx-angular-mf"],
   "targets": {
     "e2e": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/nx-angular-mf-e2e/jest.config.ts",
-        "runInBand": true
+        "command": "vitest run --config apps/nx-angular-mf-e2e/vitest.config.ts"
       },
       "dependsOn": ["^build"]
     }
