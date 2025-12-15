@@ -11,8 +11,7 @@ module.exports = {
         preset: 'angular',
 
         releaseRules: [
-          { breaking: true, scope: 'angular', release: 'major' },
-          { breaking: true, release: 'minor' },
+          { breaking: true, release: 'major' },
         ],
       },
     ],
