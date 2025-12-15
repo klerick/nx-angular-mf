@@ -68,6 +68,9 @@
     "serve": {
       "dependsOn": ["^build"],
       "executor": "./dist/libs/nx-angular-mf:serve",
+      "options": {
+        "port": 4200
+      },
       "configurations": {
         "production": {
           "buildTarget": "host-application:build:production"
