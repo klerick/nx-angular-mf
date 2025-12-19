@@ -25,7 +25,7 @@
         "outputPath": "dist/apps/host-application",
         "index": "apps/host-application/src/index.html",
         "browser": "apps/host-application/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [],
         "tsConfig": "apps/host-application/tsconfig.app.json",
         "assets": [
           {
@@ -111,7 +111,7 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "host-application:build-static",
+        "buildTarget": "host-application:build-static:production",
         "port": 4200,
         "staticFilePath": "dist/apps/host-application/browser",
         "spa": true
