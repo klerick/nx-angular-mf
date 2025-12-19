@@ -1,4 +1,4 @@
-import { parse, serialize, parseFragment } from 'parse5';
+import { parse, parseFragment, serialize } from 'parse5';
 
 import { getDataForImportMap } from './utils';
 import { ConfigMf } from '../types';
@@ -96,11 +96,19 @@ export async function indexHtml(
   mfeConfig: ConfigMf,
   isDev = false
 ): Promise<(input: string) => Promise<string>> {
-  return async (input: string) => {
+  // In dev mode: fetch import map immediately for SSR custom loader
+  if (isDev) {
     const dataImport = getDataForImportMap(mfeConfig, isDev);
-    const allImportMap = await getResultImportMap(dataImport);
-    mfeConfig.allImportMap = allImportMap;
-    const importMapStr = JSON.stringify(allImportMap);
+    mfeConfig.allImportMap = await getResultImportMap(dataImport);
+  }
+
+  return async (input: string) => {
+    // In prod mode: build import map here after outPutFileNames is populated
+    if (!isDev) {
+      const dataImport = getDataForImportMap(mfeConfig, isDev);
+      mfeConfig.allImportMap = await getResultImportMap(dataImport);
+    }
+    const importMapStr = JSON.stringify(mfeConfig.allImportMap);
 
     const importScriptElement = {
       nodeName: 'script',
@@ -122,7 +130,8 @@ export async function indexHtml(
     };
 
     const document = parse(input);
-    fixModulepreloadLinks(document, allImportMap.imports);
+    const importMapData = mfeConfig.allImportMap as { imports: Record<string, string> };
+    fixModulepreloadLinks(document, importMapData.imports);
     const { bodyNode, scriptModules, firstModulepreloadIndex } = removeScriptModules(document);
 
     if (firstModulepreloadIndex >= 0) {
