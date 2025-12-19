@@ -9,6 +9,7 @@
   "@angular/core/primitives/event-dispatch",
   "@angular/core/primitives/signals",
   "@angular/core/rxjs-interop",
+  "angular/core/primitives/di",
   "@angular/forms",
   "@angular/platform-browser",
   "@angular/platform-browser/animations",

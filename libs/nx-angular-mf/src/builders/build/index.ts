@@ -37,6 +37,16 @@ export async function* runBuilder(
     (i) => i.packageName
   );
 
+
+  if (typeof defaultOptions.index === 'string') {
+    defaultOptions.index = {
+      input: defaultOptions.index,
+      preloadInitial: false,
+    };
+  } else if (typeof defaultOptions.index === 'object' && defaultOptions.index) {
+    defaultOptions.index.preloadInitial = false;
+  }
+
   const esPluginPromise = optionsMfe.esPlugins.map((item) =>
     loadModule<Plugin>(item, options.tsConfig, context.logger)
   );

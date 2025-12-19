@@ -70,8 +70,5 @@
       }
     }
   },
-  "tags": ["type:lib", "lib:nx-angular-mf"],
-  "publishConfig": {
-    "access": "public"
-  }
+  "tags": ["type:lib", "lib:nx-angular-mf"]
 }
