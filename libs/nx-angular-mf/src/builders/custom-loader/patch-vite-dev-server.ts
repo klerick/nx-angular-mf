@@ -36,9 +36,12 @@ function customNodeImportPlugin(): Plugin {
         `(["'])(${external.join('|').replace('*/main.server.mjs|', '')})\\1`,
         'g'
       );
-      return code.replace(regex, (match, p1, p2) => {
-        return `${p1}${PREF}${p2}${p1}`;
-      });
+      return {
+        code: code.replace(regex, (match, p1, p2) => {
+          return `${p1}${PREF}${p2}${p1}`;
+        }),
+        map: null,
+      };
     },
   };
 }

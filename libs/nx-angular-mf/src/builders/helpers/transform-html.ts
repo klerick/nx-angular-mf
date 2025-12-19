@@ -3,6 +3,7 @@ import { parse, serialize, parseFragment } from 'parse5';
 import { getDataForImportMap } from './utils';
 import { ConfigMf } from '../types';
 import { getResultImportMap } from './init-import-map-utils';
+import { PREF } from '../custom-loader/constants';
 
 function findBody(node) {
   let bodyNode = null;
@@ -21,24 +22,46 @@ function findBody(node) {
   return bodyNode;
 }
 
-function removeScriptModules(node) {
-  const scriptModules = [];
-  let bodyNode = null;
+function fixModulepreloadLinks(node, importMap: Record<string, string>) {
+  const cleanKeys = Object.keys(importMap).map((key) => key.replace(PREF, ''));
+
   const innerFunction = (node) => {
     if (!node.childNodes) return;
 
-    node.childNodes = node.childNodes.filter((child) => {
+    for (const child of node.childNodes) {
       const isPreloadLink =
         child['tagName'] === 'link' &&
-        child['attrs'].some(
+        child['attrs']?.some(
           (attr) => attr.name === 'rel' && attr.value === 'modulepreload'
         );
 
       if (isPreloadLink) {
-        scriptModules.push(child);
-        return !isPreloadLink;
+        const hrefAttr = child['attrs'].find((attr) => attr.name === 'href');
+        if (hrefAttr) {
+          const matchedKey = cleanKeys.find((key) => hrefAttr.value.endsWith(key));
+          if (matchedKey) {
+            // Use bare specifier - browser will resolve via import map
+            hrefAttr.value = importMap[matchedKey];
+          }
+        }
       }
 
+      innerFunction(child);
+    }
+  };
+
+  innerFunction(node);
+}
+
+function removeScriptModules(node) {
+  const scriptModules = [];
+  let bodyNode = null;
+  let firstModulepreloadIndex = -1;
+
+  const innerFunction = (node) => {
+    if (!node.childNodes) return;
+
+    node.childNodes = node.childNodes.filter((child) => {
       const isModuleScript =
         child['tagName'] === 'script' &&
         (child['attrs'] || []).some(
@@ -47,6 +70,11 @@ function removeScriptModules(node) {
 
       if (child.tagName === 'body') {
         bodyNode = child;
+        firstModulepreloadIndex = child.childNodes.findIndex(
+          (c) =>
+            c['tagName'] === 'link' &&
+            c['attrs']?.some((attr) => attr.name === 'rel' && attr.value === 'modulepreload')
+        );
       }
 
       if (isModuleScript) {
@@ -61,17 +89,17 @@ function removeScriptModules(node) {
 
   innerFunction(node);
 
-  return { scriptModules, bodyNode };
+  return { scriptModules, bodyNode, firstModulepreloadIndex };
 }
 
 export async function indexHtml(
   mfeConfig: ConfigMf,
   isDev = false
 ): Promise<(input: string) => Promise<string>> {
-  const dataImport = getDataForImportMap(mfeConfig, isDev);
-  const allImportMap = await getResultImportMap(dataImport);
-  mfeConfig.allImportMap = allImportMap;
   return async (input: string) => {
+    const dataImport = getDataForImportMap(mfeConfig, isDev);
+    const allImportMap = await getResultImportMap(dataImport);
+    mfeConfig.allImportMap = allImportMap;
     const importMapStr = JSON.stringify(allImportMap);
 
     const importScriptElement = {
@@ -94,8 +122,16 @@ export async function indexHtml(
     };
 
     const document = parse(input);
-    const { bodyNode, scriptModules } = removeScriptModules(document);
-    bodyNode.childNodes.push(...[importScriptElement, ...scriptModules]);
+    fixModulepreloadLinks(document, allImportMap.imports);
+    const { bodyNode, scriptModules, firstModulepreloadIndex } = removeScriptModules(document);
+
+    if (firstModulepreloadIndex >= 0) {
+      bodyNode.childNodes.splice(firstModulepreloadIndex, 0, importScriptElement);
+    } else {
+      bodyNode.childNodes.unshift(importScriptElement);
+    }
+
+    bodyNode.childNodes.push(...scriptModules);
     return serialize(document);
   };
 }

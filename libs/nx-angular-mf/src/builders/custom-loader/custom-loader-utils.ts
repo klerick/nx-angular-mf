@@ -34,9 +34,19 @@ const myResolver = resolver.create({
   conditionNames: ['import', 'node', 'default'],
 });
 
-export function asyncCustomResolve(specifier: string) {
+export function asyncCustomResolve(specifier: string, parentURL?: string) {
   return new Promise<string>((resolve, reject) => {
-    myResolver(__dirname, specifier, (err, res) => {
+    let basePath = __dirname;
+    if (parentURL) {
+      try {
+        const parentPath = new URL(parentURL).pathname;
+        const dirname = parentPath.substring(0, parentPath.lastIndexOf('/'));
+        basePath = dirname;
+      } catch {
+        basePath = __dirname;
+      }
+    }
+    myResolver(basePath, specifier, (err, res) => {
       if (err || !res) return reject(err);
       resolve(res);
     });
