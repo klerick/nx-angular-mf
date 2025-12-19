@@ -1,3 +1,20 @@
+# [21.0.0](https://github.com/klerick/nx-angular-mf/compare/v20.0.0...v21.0.0) (2025-12-19)
+
+
+### Bug Fixes
+
+* **nx-angular-mf:** adjust import map handling for SSR in dev mode ([6f68963](https://github.com/klerick/nx-angular-mf/commit/6f68963ff70e3a73e609c69672c4b0d135fb8992))
+
+
+### Features
+
+* **nx-angular-mf:** Update to angular 21 ([5e28831](https://github.com/klerick/nx-angular-mf/commit/5e288317ba26f06ee3c53e28ac9a73d095a0275f))
+
+
+### BREAKING CHANGES
+
+* **nx-angular-mf:** need new version
+
 # [20.0.0](https://github.com/klerick/nx-angular-mf/compare/v19.1.0...v20.0.0) (2025-12-15)
 
 
