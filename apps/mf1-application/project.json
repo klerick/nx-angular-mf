@@ -24,7 +24,7 @@
         "outputPath": "dist/apps/mf1-application",
         "index": "apps/mf1-application/src/index.html",
         "browser": "apps/mf1-application/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [],
         "tsConfig": "apps/mf1-application/tsconfig.app.json",
         "assets": [
           {
@@ -94,7 +94,7 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "port": 4001,
+        "port": 4201,
         "buildTarget": "mf1-application:build",
         "staticFilePath": "dist/apps/mf1-application/browser",
         "spa": true

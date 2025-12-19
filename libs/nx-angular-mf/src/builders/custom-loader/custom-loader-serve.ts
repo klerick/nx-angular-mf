@@ -88,8 +88,17 @@ export async function resolve(
 ) {
   const { parentURL } = context;
   const specifier = specifierInput.replace(PREF, '');
+  // Handle Angular's internal dev server URLs (HMR, component updates, etc.)
+  // Return as-is, will be handled in load() hook
+  if (specifierInput.includes('@ng/') || specifier.includes('@ng/')) {
+    return {
+      url: specifierInput,
+      shortCircuit: true,
+    };
+  }
+
   if (
-    specifier.startsWith('vite') &&
+    specifier === 'vite' &&
     (parentURL.indexOf('@angular/build') > -1 ||
       parentURL.indexOf('custom-loader-utils') > -1)
   ) {
@@ -123,7 +132,7 @@ export async function resolve(
 
   if (!importMapName && !resolveUrl) {
     try {
-      const fileUrl = await asyncCustomResolve(specifier);
+      const fileUrl = await asyncCustomResolve(specifier, parentURL);
       const pathToFile = pathToFileURL(fileUrl);
       const pathName = new URL(parentURL).pathname;
       const resultFromImport = Object.entries(importMap.toJSON().imports).find(
@@ -166,6 +175,16 @@ export async function load(
   context: Context,
   defaultLoad: DefaultLoad
 ) {
+  // Handle Angular's internal dev server URLs (@ng/component, etc.)
+  // In SSR context, these are browser-only HMR features - return empty module
+  if (url.includes('@ng/')) {
+    return {
+      format: 'module',
+      source: '',
+      shortCircuit: true,
+    };
+  }
+
   url = url.split('?').at(0);
 
   const specifier = url.replace(fakeRootPath, '');

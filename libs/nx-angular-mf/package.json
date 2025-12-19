@@ -5,9 +5,9 @@
     "@jspm/import-map": "^1.1.0",
     "enhanced-resolve": "^5.18.0",
     "@nx/devkit": ">=21.0.0",
-    "@angular-devkit/build-angular": ">=20.0.0 <21.0.0",
-    "@angular/ssr": ">=20.0.0 <21.0.0",
-    "@angular/build": ">=20.0.0 <21.0.0",
+    "@angular-devkit/build-angular": ">=21.0.0 <22.0.0",
+    "@angular/ssr": ">=21.0.0 <22.0.0",
+    "@angular/build": ">=21.0.0 <22.0.0",
     "ts-node": "^10.9.0"
   },
   "type": "commonjs",

@@ -48,6 +48,7 @@ export function patchBuilderContext(
       cleanBuildTargetOptions(options);
     }
     options.externalDependencies = externalDependencies;
+
     return options;
   };
 }
